@@ -392,6 +392,20 @@ div.op2 {
 
 @media screen and (max-width: 1040px){
 
+    .divlogin{
+        height: 50vh;
+        width: 75%;
+        margin-left: 10%;
+        margin-top: 50%;
+        padding: 20px;
+        text-align: center;
+        align-items: center;
+        background-color: white;
+        align-items: center;
+        opacity: 0.9;
+    }
+
+
     .boxformulario {
         width: 94vw;
         align-items: center;

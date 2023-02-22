@@ -422,3 +422,127 @@ def atualizarTipoUsuario():
     else:
         flash('Favor verificar os campos!','danger')
     return redirect(url_for('visualizarTipoUsuario', id=request.form['id']))    
+
+
+##################################################################################################################################
+#TIPO DE VEÍCULOS
+##################################################################################################################################
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: tipoveiculos
+#FUNÇÃO: tela do sistema para mostrar os tipos de veículos cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/tipoveiculos', methods=['POST','GET'])
+def tipoveiculos():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('tipoveiculos')))         
+    page = request.args.get('page', 1, type=int)
+    form = frm_pesquisa()   
+    pesquisa = form.pesquisa.data
+    if pesquisa == "":
+        pesquisa = form.pesquisa_responsiva.data
+    
+    if pesquisa == "" or pesquisa == None:     
+        tiposveiculo = tb_tipoveiculo.query.order_by(tb_tipoveiculo.desc_tipoveiculo)\
+        .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
+    else:
+        tiposveiculo = tb_tipoveiculo.query.order_by(tb_tipoveiculo.desc_tipoveiculo)\
+        .filter(tb_tipoveiculo.desc_tipoveiculos.ilike(f'%{pesquisa}%'))\
+        .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
+    return render_template('tipoveiculos.html', titulo='Tipo Veículo', tiposveiculo=tiposveiculo, form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: novoTipoVeiculo
+#FUNÇÃO: mostrar o formulário de cadastro de tipo de veículo
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/novoTipoVeiculo')
+def novoTipoVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('novoTipoVeiculo'))) 
+    form = frm_editar_tipoveiculo()
+    return render_template('novoTipoVeiculo.html', titulo='Novo Tipo Veiculo', form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: criarTipoVeiculo
+#FUNÇÃO: inserir informações do tipo de usuário no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/criarTipoVeiculo', methods=['POST',])
+def criarTipoVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('criarTipoVeiculo')))     
+    form = frm_editar_tipoveiculo(request.form)
+    if not form.validate_on_submit():
+        flash('Por favor, preencha todos os dados','danger')
+        return redirect(url_for('criarTipoVeiculo'))
+    desc  = form.descricao.data
+    status = form.status.data
+    tipoveiculo = tb_tipoveiculo.query.filter_by(desc_tipoveiculo=desc).first()
+    if tipoveiculo:
+        flash ('Tipo Veículo já existe','danger')
+        return redirect(url_for('tipoveiculo')) 
+    novoTipoVeiculo = tb_tipoveiculo(desc_tipoveiculo=desc, status_tipoveiculo=status)
+    flash('Tipo de novoTipoVeiculo criado com sucesso!','success')
+    db.session.add(novoTipoUsuario)
+    db.session.commit()
+    return redirect(url_for('tipoveiculo'))
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: visualizarTipoVeiculo
+#FUNÇÃO: mostrar formulário de visualização dos tipos de veiculo cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/visualizarTipoVeiculo/<int:id>')
+def visualizarTipoVeiculo(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('visualizarTipoVeiculo')))  
+    tipoveiculo = tb_tipoveiculo.query.filter_by(cod_tipoveiculo=id).first()
+    form = frm_visualizar_tipoveiculo()
+    form.descricao.data = tipoveiculo.desc_tipoveiculo
+    form.status.data = tipoveiculo.status_tipoveiculo
+    return render_template('visualizarTipoVeiculo.html', titulo='Visualizar Tipo Veículo', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: editarTipoVeiculo
+##FUNÇÃO: mostrar formulário de edição dos tipos de veículo cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/editarTipoVeiculo/<int:id>')
+def editarTipoVeiculo(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('editarTipoVeiculo')))  
+    tipoveiculo = tb_tipoveiculo.query.filter_by(cod_tipoveiculo=id).first()
+    form = frm_editar_tipoveiculo()
+    form.descricao.data = tipoveiculo.desc_tipoveiculo
+    form.status.data = tipoveiculo.status_tipoveiculo
+    return render_template('editarTipoVeiculo.html', titulo='Editar Tipo Veículo', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: atualizarTipoVeiculo
+#FUNÇÃO: alterar as informações dos tipos de veículo no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/atualizarTipoVeiculo', methods=['POST',])
+def atualizarTipoVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('atualizarTipoVeiculo')))      
+    form = frm_editar_tipoveiculo(request.form)
+    if form.validate_on_submit():
+        id = request.form['id']
+        tipoveiculo = tb_tipoveiculo.query.filter_by(cod_tipoveiculo=request.form['id']).first()
+        tipoveiculo.desc_tipoveiculo = form.descricao.data
+        tipoveiculo.status_tipoveiculo= form.status.data
+        db.session.add(tipoveiculo)
+        db.session.commit()
+        flash('Tipo de veículo atualizado com sucesso!','success')
+    else:
+        flash('Favor verificar os campos!','danger')
+    return redirect(url_for('visualizarTipoVeiculo', id=request.form['id']))    
