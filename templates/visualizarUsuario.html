@@ -1,0 +1,40 @@
+{% extends "template.html"%}
+{% block conteudo %}
+<div class="box_cabecalho">
+  <div class="box_titulo_interno">
+    <i class="bi bi-person" data-toggle="tooltip" data-placement="right" title="Usuários"></i> {{ titulo }}
+  </div>
+  <div class="box_botoes">
+    <a class="btn btn_titulo" href="{{url_for('editarUsuario',id=id)}}"><i class="bi bi-pencil" style="font-size:1.5rem; color:white;"></i></a>
+  </div>
+  <div class="box_botoes">
+    <a class="btn btn_titulo" href="{{url_for('usuario')}}"><i class="bi bi-reply" style="font-size:1.5rem; color:white;"></i></a>
+  </div>
+</div>
+<div class="boxformulario mb-3">
+  <fieldset>
+    <input type="hidden" name="id" id="id" value="{{id}}">
+    {{form.csrf_token()}}
+    <div class="form-group">
+      {{form.nome.label(class="form-label")}}
+      {{form.nome(class="form-control")}}
+    </div>
+    <div class="form-group">
+      {{form.email.label(class="form-label")}}
+      {{form.email(class="form-control")}}
+    </div>
+    <div class="form-group">
+      {{form.login.label(class="form-label")}}
+      {{form.login(class="form-control")}}
+    </div>
+    <div class="form-group">
+      {{form.tipousuario.label(class="form-label")}}
+      {{form.tipousuario(class="form-control")}}
+    </div>
+    <div class="form-group">
+      {{form.status.label(class="form-label")}}
+      {{form.status(class="form-control")}}
+    </div>           
+  </fieldset>
+</div>
+{% endblock%}

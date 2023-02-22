@@ -1,0 +1,690 @@
+ /* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+th{
+    text-align: left;
+}
+
+thead{
+    color: white;
+    font-weight: bold;
+    text-align: left;
+    background-color: black;
+
+}
+
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+    line-height: 1;
+    min-height: 100vh;
+    height: 100%;
+    background-image: url("./fundo.jpeg");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+
+footer {
+    width: 100%;
+    height: 12vh;
+    bottom:0;
+    background-color: white;
+    text-align: center;
+}
+
+.boxtitulocombusca {
+    margin: 15px auto;
+    width: 70%; /* Valor da Largura */
+    border-radius: 10px;
+    padding: 5px;
+    line-height: 50px;
+    text-align: center;   
+    font-weight: bold;
+    display: flex;
+    border: 2px solid black;
+    background-color: #0d6efd;
+    color: white;
+    align-items: center;
+}
+
+.boxtitulocombusca_responsivo {
+    display:none
+}
+
+
+.box_titulo {
+    font-size: 1.5rem;
+    width: 60%;
+    font-weight: bold;  
+    text-align: left; 
+}
+
+.busca__input {
+    background-color: white;
+    font-size: 1rem;
+    height: 40px;
+} 
+
+.box_organizadora{
+    display: flex;
+    align-items: center;
+}
+
+.box_botoes {
+    width: 7%; /* Valor da Largura */
+    align-items: left;
+    padding: 10px;
+}
+
+.boxcentral {
+    margin: 10px auto;
+    width: 70%; /* Valor da Largura */
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 10px;  
+    line-height: 170%;
+    text-align: left;
+    height: auto;
+    border: 2px solid black;
+    background-color: white;
+}
+
+.divmarrom {
+    background-color: #7F7045;
+    color: white;
+    height: 7vh;
+    vertical-align: middle;
+    display: table-cell;
+    width: 100vw;
+    padding-left: 13vw;
+}
+
+.divbranco {
+    background-color: white;
+    color: #858585;
+    height: 7vh;
+    vertical-align: middle;
+    display: table-cell;
+    width: 100vw;
+    padding-left: 13vw;
+}
+
+.divanimais {
+    background-image: url("./caogato2.jpg");
+    height: 500px;
+    width: 100%;
+    color: white;
+    font-size: 2rem;
+    padding-top: 15%;
+    padding-left: 10%;
+ }
+
+
+
+
+ .divsobre {
+    height: 100%;
+    margin-top: 3vh;
+    margin-left: 3vh;
+    margin-right: 3vh;
+    display: flex;
+    justify-content: space-between;
+  
+}
+
+div.op1 {
+    width: 25%;
+    background-color: #CE7C2A;
+    font-size: 3vw;
+    text-align: center;
+    min-width:30vw;
+    margin-left: 9vw;
+    height: 100%;
+    border-radius: 2em 2em 0em 0em;
+    padding-top: 4%;
+}
+
+div.op2 {
+    width: 48%;
+    margin-right: 0vw;
+    font-size: 1.3vw;
+    text-align: center;
+    padding: 5vw 0vw 0vw 0vw;
+    min-width:30vw;
+    text-align: justify;
+    padding-right: 8vw;
+}
+.clean{clear:both;}
+
+
+.divservico{
+    margin-top: 1%;
+    background-color: #F5F5F5;
+}
+
+.divtitulo{
+    color: #7F7045;
+    text-align: center;
+    font-size: 1.5vw;
+    margin-bottom: 3px;
+}
+
+.divtitulo1{
+    color: black;
+    text-align: center;
+    font-size: 1.5vw;
+    font-weight: bold;
+
+}
+
+.divservicocentral{
+    width: 60%;
+    display: inline-flex;
+    justify-content: space-around;
+    margin-top: 5px;
+    text-align: center;
+    align-items: center;
+    margin-left: 20%;
+
+    
+}
+
+.divservicointerna{
+    width: 200px;
+    height: 250px;
+    background-color: #CE7C2A;  
+    margin: 5px;
+    border-width: 2px 4px;
+    border-radius: 40px;
+    color: white;
+    padding-top: 10px;   
+    line-height: 40px;
+}
+
+.divservicointerna-titulo{
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.3vw;
+    padding-top: 5px;
+}
+
+.divservicointerna-texto{
+    text-align: center;
+    font-size: 1vw;
+    width: 95%;
+}
+
+.divescolhacentral{
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-around;
+    margin-top: 5px;
+    text-align: center;
+    align-items: center;
+
+}
+
+.divescolhaesquerda{
+    width: 30%;
+}
+
+.divescolhadireita{
+    width: 70%;
+}
+
+.divescolhadireitainterna{
+    padding-bottom: 20px;
+    padding-top: 20px;
+}
+
+.divescolhadireitainterna-item{
+    width: 90%;
+    display: inline-flex;
+    justify-content: space-around;   
+    margin-left: 40px; 
+    padding-bottom: 10px;
+    padding-top: 10px;    
+}
+
+.merged{
+    width:30%;
+    height:100%;
+}
+
+.divescolhadireitainterna-textos{
+    width: 70%;
+}
+.textointernoescolha{
+    font-size: 1.3rem;
+    text-align: justify;
+    margin-bottom: 10px;
+}
+
+
+.divtitulo-escolha{
+    font-size: 1.5rem;
+    text-align: left;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.titulo-sobre{
+    color: #7F7045;
+    text-align: center;
+    font-size: 1.5vw;
+    margin-bottom: 10px;
+    text-align: center;
+
+}
+
+.divlogin{
+    left: 50%;
+    top: 50%;    
+    height: 50vh;
+    width: 25%;
+    margin-left: 37%;
+    margin-top: 10%;
+    padding: 10px;
+    text-align: center;
+    align-items: center;
+    background-color: white;
+    align-items: center;
+    opacity: 0.9;
+}
+
+.divlogin-logo{
+    height: 150px;
+    margin-bottom: 15px;
+    text-align: center;
+    align-items: center;    
+    padding-top: 25px;
+}
+
+.divlogin-input{
+    height: 30px;
+    text-align: center;
+    align-items: center;    
+    margin-bottom: 40px;
+
+
+}
+
+.box_cabecalho {
+    margin: 15px auto;
+    width: 70%; /* Valor da Largura */
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 5px;
+    line-height: 50px;
+    font-size: 2vw;
+    color: white;
+    text-align: left;   
+    font-weight: bold;
+    display: flex;
+    border: 2px solid black;
+    background-color: #0d6efd;
+}
+
+.boxformulario {
+    margin: 10px auto;
+    width: 70%; /* Valor da Largura */
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 10px;  
+    line-height: 200%;
+    border: 2px solid black;
+    background-color: white;
+}
+
+.rotulo{
+    color: black;
+    margin: 2px;
+}
+
+.box_titulo_interno {
+    margin: 5px auto;
+    width: 90%; /* Valor da Largura */
+    align-items: center;
+    justify-content: left;
+    padding: 5px;
+    font-size: 2vw;
+    text-align: left;   
+    font-weight: bold;
+    display: flex;
+    font-weight: bold;
+}
+
+@media screen and (max-width: 1040px){
+
+    .boxformulario {
+        width: 94vw;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        border: 2px solid black;
+        padding: 10px;
+        line-height: 40px;
+        margin-top: 10px;
+        margin-left: 0px;    
+        background-color: white;
+    }
+
+    .box_cabecalho {
+        width: 94vw;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 5px;
+        line-height: 50px;
+        font-size: 2vw;
+        color: black;
+        text-align: left;   
+        font-weight: bold;
+        display: flex;
+        border: 2px solid black;
+        background-color: #CE7C2A;
+        margin-left: 0px;
+
+
+    }
+
+    body{
+        width: 100vw;
+    }
+
+    footer {
+        width: 100vw;
+        height: 10vh;
+        bottom:0;
+        background-color: white;
+        text-align: center;
+        vertical-align: top;
+    }   
+
+    .busca__input {
+        align-items: center;
+        background-color: white;
+        font-size: 1rem;
+        width: 100%;
+    }  
+
+    .boxcentral {
+        align-items: left;
+        justify-content: left;
+        border-radius: 10px;
+        line-height: 150%;
+        text-align: left;
+        width: 93vw;
+        border: 2px solid black;
+        padding: 10px;
+        line-height: 40px;
+        margin-top: 10px;
+        background-color: white;
+    }
+
+    .box_titulo {
+        font-size: 4vw;
+        width: 50%;
+        font-weight: bold;     
+    }
+
+    .boxtitulocombusca {
+        display: none;
+    }
+
+    .box_titulo_interno {
+        font-size: 4vw;
+        width: 70%;
+        font-weight: bold;   
+        color: white;
+    } 
+    
+    .box_titulo {
+        font-size: 4vw;
+        width: 50%;
+        font-weight: bold;     
+        color: white;
+    }
+  
+  
+
+    .box_botoes {
+        width: 17%; /* Valor da Largura */
+        align-items: left;
+        padding: 1px;
+    }
+
+    .boxtitulocombusca_responsivo {
+        display: block;
+        line-height: 40px;
+        border-radius: 10px;  
+        text-align: left;   
+        color: black;
+        width: 93vw;
+        height: 15vh;
+        padding: 1px;
+        background-color: #0d6efd;
+        margin-top: 15px;
+        color: white;
+        border: 2px solid black;
+    }
+
+
+    .divanimais {
+        /* Background pattern from Toptal Subtle Patterns */
+        background-image: url("./caogato-resp.jpg" );
+        width: 100vw;
+        color: white;
+        font-size: 1.5rem;
+        padding-top: 5%;
+        padding-left: 5%;
+        background-size: cover;
+     }
+
+    .divtitulo{
+        font-size: 1.5rem;
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    .titulo-sobre{
+        font-size: 1.5rem;
+        width: 100%;
+        margin-left: 0px;
+    }
+
+    .divtitulo1{
+        font-size: 1.2rem;
+        width: 90vw;
+    }
+
+    .divservicocentral{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 5px;
+        text-align: center;
+        margin-left: 0%;        
+    }
+
+    .divservico{
+        width: 90vw;
+        text-align: center;
+        margin-left: 1.5vw;
+    }
+
+    .divservicointerna{
+        width: 70%;
+        height: 250px;
+        background-color: #CE7C2A;  
+        margin: 5px;
+        border-width: 2px 4px;
+        border-radius: 40px;
+        color: white;
+        padding-top: 10px;   
+        line-height: 40px;        
+    }
+    .divservicointerna-titulo{
+        font-size: 1.5rem;
+    }
+    .divservicointerna-texto{
+        font-size: 1.2rem;
+    }
+
+    .divmarrom {
+        background-color: #7F7045;
+        color: white;
+        height: 7vh;
+        vertical-align: middle;
+        width: 100vw;
+        padding-left: 20px
+
+    }   
+
+    .divbranco {
+        background-color: white;
+        color: #858585;
+        height: 7vh;
+        vertical-align: middle;
+        width: 100vw;
+        padding-left: 0px;
+    }
+
+    .divsobre {
+        height: 100%;
+        width: 93vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;      
+        margin-left: -4%;  
+    }
+
+    .imagemcachorronocolo{
+        max-width: 100%;
+        width: 100%;
+    }
+
+    div.op1 {
+        width: 100vw;
+        background-color: #CE7C2A;
+        text-align: center;
+        border-radius: 2em 2em 0em 0em;
+        padding-top: 0%;
+        
+    }    
+
+    div.op2 {
+        width: 80vw;
+        font-size: 1.2rem;
+        margin-right: 3vw;
+        padding: 5vw 0vw 0vw 0vw;
+        min-width:30vw;
+        text-align: justify;
+        padding-right: 8vw;
+
+    }
+
+    .divescolhacentral{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 5px;
+        text-align: center;
+        align-items: center;
+        margin-left: 0%;              
+    }
+
+    .imagemgato{
+        width: 90vw;
+        margin-left: -127px;
+    }
+
+    .divescolhadireita{
+        width: 100%;
+
+    }
+    .imagem-escolha{
+        width: 40%;
+        height: 40%;
+    }
+
+    .divtitulo-escolha{
+        font-size: 1.2rem;
+    }
+
+    .textointernoescolha{
+        font-size: 1rem;
+    }
+
+    .merged{
+        width: 80vw;
+        align-items: center;
+
+    }
+
+    .divescolhadireitainterna-item{
+        display: flex;
+        flex-direction: column;
+        width: 90vw;
+        margin-left: 20px;
+    }
+
+    .divtitulo-escolha{
+        width: 90vw;
+        text-align: center;
+    
+    }
+
+    .textointernoescolha{
+        width: 90vw;
+    }
+
+    .imagem-escolha{
+        width: 50%;
+        height: 50%;
+    }
+
+
+
+
+  }
+

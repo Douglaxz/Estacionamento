@@ -1,0 +1,89 @@
+{% extends "template.html"%}
+{% block conteudo %}
+<form method="post" action="{{ url_for('tipousuario') }}" enctype="multipart/form-data" id="formulario">
+<!-- barra de navegação para desktop/notebook -->
+<div class="boxtitulocombusca">
+    <div class="box_titulo"><i class="bi bi-people" data-toggle="tooltip" data-placement="right" title="Usuários"></i> {{ titulo }}</div>
+    <div class="box_busca">{{form.pesquisa(class="form-control")}}</div>    
+    <div class="box_botoes"><a class="btn btn_titulo" href="#" onclick="myFunction()"><i class="bi bi-search" style="font-size:1.5rem; color:white;"></i></a></div>
+    <div class="box_botoes"><a class="btn btn_titulo" href="{{url_for('tipousuario')}}"><i class="bi bi-eraser" style="font-size:1.5rem; color:white;"></i></a></div>
+    <div class="box_botoes"><a class="btn btn_titulo" href="{{url_for('novoTipoUsuario')}}"><i class="bi bi-file-earmark-plus" style="font-size:1.5rem; color:white;"></i></a></div>
+</div>
+<!-- final -->
+<!-- barra de navegação para mobile -->
+<div class="boxtitulocombusca_responsivo">  
+  <div class="box_organizadora">  
+    <div class="box_titulo"><i class="bi bi-people" data-toggle="tooltip" data-placement="right" title="Usuários"></i> {{ titulo }}</div>
+    <div class="box_botoes"><a class="btn btn_titulo" href="#" onclick="myFunction()"><i class="bi bi-search" style="font-size:1.5rem; color:white;"></i></a></div>
+    <div class="box_botoes"><a class="btn btn_titulo" href="{{url_for('tipousuario')}}"><i class="bi bi-eraser" style="font-size:1.5rem; color:white;"></i></a></div>
+    <div class="box_botoes"><a class="btn btn_titulo" href="{{url_for('novoTipoUsuario')}}"><i class="bi bi-file-earmark-plus" style="font-size:1.5rem; color:white;"></i></a></div>
+   </div>
+  <div class="container input-group">{{form.pesquisa_responsiva(class="busca__input")}}</div>
+</div>
+<!-- final -->
+</form>
+<!-- mostrar dados -->
+<div class="boxcentral">
+  <table class="table table-bordered table-responsiv table-hover">
+      <thead>
+          <tr>
+            <th width="80%">Tipo Usuário</th>
+            <th width="10%">Status</th>
+            <th width="10%">Ações</th>
+          </tr>
+      </thead>
+      <tbody>
+          {% for tipousuario in tiposusuario.items %}
+          <tr>
+              <td class="text-left">{{ tipousuario.desc_usertype }}</td>
+              <td class="text-left">
+                {% if tipousuario.status_usertype == 0: %}
+                <i class="btn bi bi-toggle-on text-success" style="font-size:2rem; color:white;">
+                {% else %}
+                <i class="btn bi bi-toggle-off text-danger" style="font-size:2rem; color:white;">
+                {% endif %}                       
+              <td>
+                <a class="btn" href="{{url_for('visualizarTipoUsuario',id=tipousuario.cod_usertype)}}"><i class="bi bi-eye" style="font-size:1.5rem; color:black;"></i></a>
+            </td>              
+          </tr>
+          {% endfor %}
+      </tbody>
+  </table>
+</div>
+<!-- navegação entre as páginas -->
+<div class="boxcentral">
+  <!-- paginação links-->
+  <div class="text-right">
+    <a href="{{ url_for('tipousuario', page=tiposusuario.prev_num) }}"
+      class="btn btn-outline-dark 
+      {% if tiposusuario.page == 1 %}disabled{% endif %}">
+        &laquo;
+    </a>
+  <!-- Loop through the number of pages to display a link for each-->
+    {% for page_num in tiposusuario.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+  {% if page_num %}
+  <!-- Check for the active page and set the link to "Active"-->
+            {% if tiposusuario.page == page_num %}
+            <a href="{{ url_for('tipousuario', page=page_num) }}"
+              class="btn btn-dark">
+                {{ page_num }}
+            </a>
+            {% else %}
+            <a href="{{ url_for('tipousuario', page=page_num) }}"
+              class="btn btn-outline-dark">
+                {{ page_num }}
+            </a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+    <a href="{{ url_for('tipousuario', page=tiposusuario.next_num) }}"
+      class="btn btn-outline-dark 
+      {% if tiposusuario.page == tiposusuario.pages %}disabled{% endif %}">
+        &raquo;
+    </a>
+  </div>
+  <p class="text-right mt-3">Mostrando página {{ tiposusuario.page }} de {{ tiposusuario.pages }}</p>
+</div>
+{% endblock%}
