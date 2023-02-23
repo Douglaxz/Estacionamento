@@ -1,7 +1,7 @@
 #importações
 import os
 from estacionamento import app, db
-from models import tb_user, tb_usertype, tb_tipoveiculo
+from models import tb_user, tb_usertype, tb_tipoveiculo, tb_marcaveiculo
 from flask_wtf import FlaskForm
 from wtforms import Form, StringField, validators, SubmitField,IntegerField, SelectField,PasswordField,DateField,EmailField,BooleanField,RadioField, TextAreaField, TimeField, TelField, DateTimeLocalField,FloatField
 
@@ -133,4 +133,32 @@ class frm_visualizar_marcaveiculo(FlaskForm):
     status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')], render_kw={'readonly': True})
     salvar = SubmitField('Salvar')   
     
-        
+##################################################################################################################################
+#VEÍCULO
+##################################################################################################################################
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: veículo
+#TIPO: edição
+#TABELA: tb_veiculo
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_editar_veiculo(FlaskForm):
+    descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a descrição do tipo de veículo"})
+    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
+    marcaveiculo = SelectField('Marca:', coerce=int, choices=[(g.cod_marcaveiculo, g.desc_marcaveiculo) for g in tb_marcaveiculo.query.order_by('desc_marcaveiculo')])
+    tipoveiculo = SelectField('Tipo:', coerce=int, choices=[(g.cod_tipoveiculo, g.desc_tipoveiculo) for g in tb_tipoveiculo.query.order_by('desc_tipoveiculo')])
+    salvar = SubmitField('Salvar')    
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: usuário
+#TIPO: visualização
+#TABELA: tb_veiculo
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_visualizar_veiculo(FlaskForm):
+    descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={'readonly': True})
+    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')], render_kw={'readonly': True})
+    marcaveiculo = SelectField('Marca:', coerce=int, choices=[(g.cod_marcaveiculo, g.desc_marcaveiculo) for g in tb_marcaveiculo.query.order_by('desc_marcaveiculo')], render_kw={'readonly': True})
+    tipoveiculo = SelectField('Tipo:', coerce=int, choices=[(g.cod_tipoveiculo, g.desc_tipoveiculo) for g in tb_tipoveiculo.query.order_by('desc_tipoveiculo')], render_kw={'readonly': True})
+    salvar = SubmitField('Salvar')   
+    
+                
