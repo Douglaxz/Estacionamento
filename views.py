@@ -6,7 +6,8 @@ from datetime import date, timedelta
 from estacionamento import app, db
 from models import tb_user,\
     tb_usertype,\
-    tb_tipoveiculo
+    tb_tipoveiculo,\
+    tb_marcaveiculo
 from helpers import \
     frm_pesquisa, \
     frm_editar_senha,\
@@ -15,7 +16,9 @@ from helpers import \
     frm_visualizar_tipousuario,\
     frm_editar_tipousuario,\
     frm_editar_tipoveiculo,\
-    frm_visualizar_tipoveiculo
+    frm_visualizar_tipoveiculo,\
+    frm_editar_marcaveiculo,\
+    frm_visualizar_marcaveiculo    
 
 
 # ITENS POR PÁGINA
@@ -468,7 +471,7 @@ def novoTipoVeiculo():
 
 #---------------------------------------------------------------------------------------------------------------------------------
 #ROTA: criarTipoVeiculo
-#FUNÇÃO: inserir informações do tipo de usuário no banco de dados
+#FUNÇÃO: inserir informações do tipo de veículos no banco de dados
 #PODE ACESSAR: usuários do tipo administrador
 #--------------------------------------------------------------------------------------------------------------------------------- 
 @app.route('/criarTipoVeiculo', methods=['POST',])
@@ -546,3 +549,126 @@ def atualizarTipoVeiculo():
     else:
         flash('Favor verificar os campos!','danger')
     return redirect(url_for('visualizarTipoVeiculo', id=request.form['id']))    
+
+##################################################################################################################################
+#MARCA DE VEÍCULOS
+##################################################################################################################################
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: marcaveiculo
+#FUNÇÃO: tela do sistema para mostrar as marcas de veículos cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/marcaveiculo', methods=['POST','GET'])
+def marcaveiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('marcaveiculo')))         
+    page = request.args.get('page', 1, type=int)
+    form = frm_pesquisa()   
+    pesquisa = form.pesquisa.data
+    if pesquisa == "":
+        pesquisa = form.pesquisa_responsiva.data
+    
+    if pesquisa == "" or pesquisa == None:     
+        marcasveiculo = tb_marcaveiculo.query.order_by(tb_marcaveiculo.desc_marcaveiculo)\
+        .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
+    else:
+        marcasveiculo = tb_marcaveiculo.query.order_by(tb_marcaveiculo.desc_marcaveiculo)\
+        .filter(tb_marcaveiculo.desc_marcaveiculos.ilike(f'%{pesquisa}%'))\
+        .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
+    return render_template('marcaveiculo.html', titulo='Marca Veículo', marcasveiculo=marcasveiculo, form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: novoTipoVeiculo
+#FUNÇÃO: mostrar o formulário de cadastro das marcas de veículo
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/novoMarcaVeiculo')
+def novoMarcaVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('novoMarcaVeiculo'))) 
+    form = frm_editar_tipoveiculo()
+    return render_template('novoMarcaVeiculo.html', titulo='Novo Marca Veiculo', form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: criarMarcaVeiculo
+#FUNÇÃO: inserir informações do marcas de veículos no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/criarMarcaVeiculo', methods=['POST',])
+def criarMarcaVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('criarMarcaVeiculo')))     
+    form = frm_editar_marcaveiculo(request.form)
+    if not form.validate_on_submit():
+        flash('Por favor, preencha todos os dados','danger')
+        return redirect(url_for('criarMarcaVeiculo'))
+    desc  = form.descricao.data
+    status = form.status.data
+    marcaveiculo = tb_marcaveiculo.query.filter_by(desc_marcaveiculo=desc).first()
+    if marcaveiculo:
+        flash ('Marca Veículo já existe','danger')
+        return redirect(url_for('tipoveiculo')) 
+    novoMarcaVeiculo = tb_marcaveiculo(desc_marcaveiculo=desc, status_marcaveiculo=status)
+    flash('Marca de veículo criado com sucesso!','success')
+    db.session.add(novoMarcaVeiculo)
+    db.session.commit()
+    return redirect(url_for('marcaveiculo'))
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: visualizarMarcaVeiculo
+#FUNÇÃO: mostrar formulário de visualização das marcas de veiculo cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/visualizarMarcaVeiculo/<int:id>')
+def visualizarMarcaVeiculo(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('visualizarMarcaVeiculo')))  
+    marcaveiculo = tb_marcaveiculo.query.filter_by(cod_marcaveiculo=id).first()
+    form = frm_visualizar_marcaveiculo()
+    form.descricao.data = marcaveiculo.desc_marcaveiculo
+    form.status.data = marcaveiculo.status_marcaveiculo
+    return render_template('visualizarMarcaVeiculo.html', titulo='Visualizar Marca Veículo', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: editarMarcaVeiculo
+##FUNÇÃO: mostrar formulário de edição das marcas de veículo cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/editarMarcaVeiculo/<int:id>')
+def editarMarcaVeiculo(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('editarMarcaVeiculo')))  
+    marcaveiculo = tb_marcaveiculo.query.filter_by(cod_marcaveiculo=id).first()
+    form = frm_editar_marcaveiculo()
+    form.descricao.data = marcaveiculo.desc_marcaveiculo
+    form.status.data = marcaveiculo.status_marcaveiculo
+    return render_template('editarMarcaVeiculo.html', titulo='Editar Marca Veículo', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: atualizarMarcaVeiculo
+#FUNÇÃO: alterar as informações das marcas de veículo no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/atualizarMarcaVeiculo', methods=['POST',])
+def atualizarMarcaVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('atualizarMarcaVeiculo')))      
+    form = frm_editar_marcaveiculo(request.form)
+    if form.validate_on_submit():
+        id = request.form['id']
+        marcaveiculo = tb_marcaveiculo.query.filter_by(cod_marcaveiculo=request.form['id']).first()
+        marcaveiculo.desc_marcaveiculo = form.descricao.data
+        marcaveiculo.status_marcaveiculo= form.status.data
+        db.session.add(marcaveiculo)
+        db.session.commit()
+        flash('Marca de veículo atualizado com sucesso!','success')
+    else:
+        flash('Favor verificar os campos!','danger')
+    return redirect(url_for('visualizarMarcaVeiculo', id=request.form['id']))    

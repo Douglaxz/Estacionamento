@@ -45,7 +45,7 @@ class tb_tipoveiculo(db.Model):
 #---------------------------------------------------------------------------------------------------------------------------------
 class tb_marcaveiculo(db.Model):
     cod_marcaveiculo = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    ddesc_marcaveiculo = db.Column(db.String(50), nullable=False)
+    desc_marcaveiculo = db.Column(db.String(50), nullable=False)
     status_marcaveiculo = db.Column(db.Integer, nullable=False)
     def __repr__(self):
         return '<Name %r>' % self.name  
