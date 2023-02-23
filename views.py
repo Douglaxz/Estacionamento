@@ -7,7 +7,8 @@ from estacionamento import app, db
 from models import tb_user,\
     tb_usertype,\
     tb_tipoveiculo,\
-    tb_marcaveiculo
+    tb_marcaveiculo,\
+    tb_veiculo
 from helpers import \
     frm_pesquisa, \
     frm_editar_senha,\
@@ -18,7 +19,9 @@ from helpers import \
     frm_editar_tipoveiculo,\
     frm_visualizar_tipoveiculo,\
     frm_editar_marcaveiculo,\
-    frm_visualizar_marcaveiculo    
+    frm_visualizar_marcaveiculo,\
+    frm_editar_veiculo,\
+    frm_visualizar_veiculo
 
 
 # ITENS POR PÁGINA
@@ -672,3 +675,135 @@ def atualizarMarcaVeiculo():
     else:
         flash('Favor verificar os campos!','danger')
     return redirect(url_for('visualizarMarcaVeiculo', id=request.form['id']))    
+
+
+##################################################################################################################################
+#VEÍCULOS
+##################################################################################################################################
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: veiculo
+#FUNÇÃO: tela do sistema para mostrar os veículos cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/veiculo', methods=['POST','GET'])
+def veiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('veiculo')))         
+    page = request.args.get('page', 1, type=int)
+    form = frm_pesquisa()   
+    pesquisa = form.pesquisa.data
+    if pesquisa == "":
+        pesquisa = form.pesquisa_responsiva.data
+    
+    if pesquisa == "" or pesquisa == None:     
+        veiculos = tb_veiculo.query.order_by(tb_veiculo.desc_veiculo)\
+        .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
+    else:
+        veiculos = tb_veiculo.query.order_by(tb_veiculo.desc_veiculo)\
+        .filter(tb_veiculo.desc_veiculos.ilike(f'%{pesquisa}%'))\
+        .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
+    return render_template('veiculo.html', titulo='Veículo', veiculos=veiculos, form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: novoVeiculo
+#FUNÇÃO: mostrar o formulário de cadastro dos veículo
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/novoVeiculo')
+def novoVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('novoVeiculo'))) 
+    form = frm_editar_veiculo()
+    return render_template('novoVeiculo.html', titulo='Novo Veiculo', form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: criarVeiculo
+#FUNÇÃO: inserir informações do marcas de veículos no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/criarVeiculo', methods=['POST',])
+def criarVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('criarVeiculo')))     
+    form = frm_editar_veiculo(request.form)
+    if not form.validate_on_submit():
+        flash('Por favor, preencha todos os dados','danger')
+        return redirect(url_for('criarVeiculo'))
+    desc  = form.descricao.data
+    status = form.status.data
+    marca = form.marcaveiculo.data
+    tipo = form.tipoveiculo.data
+    veiculo = tb_veiculo.query.filter_by(desc_veiculo=desc).first()
+    if veiculo:
+        flash ('Veículo já existe','danger')
+        return redirect(url_for('veiculo')) 
+    novoVeiculo = tb_marcaveiculo(desc_veiculo=desc, status_veiculo=status,cod_marcaveiculo=marca,cod_tipoveiculo=tipo)
+    flash('Veículo criado com sucesso!','success')
+    db.session.add(novoVeiculo)
+    db.session.commit()
+    return redirect(url_for('veiculo'))
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: visualizarVeiculo
+#FUNÇÃO: mostrar formulário de visualização dos veiculos cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/visualizarVeiculo/<int:id>')
+def visualizarVeiculo(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('visualizarVeiculo')))  
+    veiculo = tb_veiculo.query.filter_by(cod_veiculo=id).first()
+    form = frm_visualizar_veiculo()
+    form.descricao.data = veiculo.desc_veiculo
+    form.status.data = veiculo.status_veiculo
+    form.marcaveiculo.data = veiculo.cod_marcaveiculo
+    form.tipoveiculo.data = veiculo.cod_tipoveiculo
+    return render_template('visualizarVeiculo.html', titulo='Visualizar Veículo', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: editarVeiculo
+##FUNÇÃO: mostrar formulário de edição dos veículo cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/editarVeiculo/<int:id>')
+def editarVeiculo(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('editarVeiculo')))  
+    veiculo = tb_veiculo.query.filter_by(cod_veiculo=id).first()
+    form = frm_editar_veiculo()
+    form.descricao.data = veiculo.desc_veiculo
+    form.status.data = veiculo.status_veiculo
+    form.marcaveiculo.data = veiculo.cod_marcaveiculo
+    form.tipoveiculo.data = veiculo.cod_tipoveiculo
+    return render_template('editarVeiculo.html', titulo='Editar Veículo', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: atualizarVeiculo
+#FUNÇÃO: alterar as informações dos veículo no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/atualizarVeiculo', methods=['POST',])
+def atualizarVeiculo():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('atualizarVeiculo')))      
+    form = frm_editar_veiculo(request.form)
+    if form.validate_on_submit():
+        id = request.form['id']
+        veiculo = tb_veiculo.query.filter_by(cod_veiculo=request.form['id']).first()
+        veiculo.desc_veiculo = form.descricao.data
+        veiculo.status_veiculo= form.status.data
+        veiculo.cod_marca = form.marcaveiculo.data
+        veiculo.cod_tipoveiculo = form.tipoveiculo.data
+        db.session.add(veiculo)
+        db.session.commit()
+        flash('Veículo atualizado com sucesso!','success')
+    else:
+        flash('Favor verificar os campos!','danger')
+    return redirect(url_for('visualizarVeiculo', id=request.form['id']))    
