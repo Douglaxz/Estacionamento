@@ -810,4 +810,136 @@ def atualizarVeiculo():
         flash('Veículo atualizado com sucesso!','success')
     else:
         flash('Favor verificar os campos!','danger')
-    return redirect(url_for('visualizarVeiculo', id=request.form['id']))    
+    return redirect(url_for('visualizarVeiculo', id=request.form['id']))   
+
+##################################################################################################################################
+#PREÇOS
+##################################################################################################################################
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: precos
+#FUNÇÃO: tela do sistema para mostrar os preços cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/preco', methods=['POST','GET'])
+def preco():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('preco')))         
+    page = request.args.get('page', 1, type=int)
+    form = frm_pesquisa()   
+    pesquisa = form.pesquisa.data
+    if pesquisa == "":
+        pesquisa = form.pesquisa_responsiva.data
+    
+    if pesquisa == "" or pesquisa == None:     
+        precos = tb_preco.query.order_by(tb_preco.desc_preco)\
+        .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
+    else:
+        precos = tb_preco.query.order_by(tb_preco.desc_preco)\
+        .filter(tb_preco.desc_precoilike(f'%{pesquisa}%'))\
+        .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
+    return render_template('preco.html', titulo='Preços', precos=precos, form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: novoPreco
+#FUNÇÃO: mostrar o formulário de cadastro dos preços
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/novoPreco')
+def novoPreco():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('novoPreco'))) 
+    form = frm_editar_preco()
+    return render_template('novoPreco.html', titulo='Novo Preço', form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: criarPreco
+#FUNÇÃO: inserir informações do preços no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/criarPreco', methods=['POST',])
+def criarPreco():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('criarPreco')))     
+    form = frm_editar_preco(request.form)
+    if not form.validate_on_submit():
+        flash('Por favor, preencha todos os dados','danger')
+        return redirect(url_for('criarPreco'))
+    desc  = form.descricao.data
+    status = form.status.data
+    horas = form.horas.data
+    valor = form.preco.data
+    
+    preco = tb_preco.query.filter_by(desc_preco=desc).first()
+    if preco:
+        flash ('Preço já existe','danger')
+        return redirect(url_for('preco')) 
+    novoPreco = tb_preco(desc_preco=desc, status_preco=status,horas_preco=horas,valor_preco=valor)
+    flash('Preço criado com sucesso!','success')
+    db.session.add(novoPreco)
+    db.session.commit()
+    return redirect(url_for('preco'))
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: visualizarPreco
+#FUNÇÃO: mostrar formulário de visualização dos preços cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/visualizarPreco/<int:id>')
+def visualizarPreco(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('visualizarPreco')))  
+    preco = tb_preco.query.filter_by(cod_preco=id).first()
+    form = frm_visualizar_preco()
+    form.descricao.data = preco.desc_preco
+    form.status.data = preco.status_preco
+    form.horas.data = preco.horas_preco
+    form.preco.data = preco.valor_preco
+    return render_template('visualizarPreco.html', titulo='Visualizar Preço', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: editarPreco
+##FUNÇÃO: mostrar formulário de edição dos preços cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/editarPreco/<int:id>')
+def editarPreco(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('editarPreco')))  
+    preco = tb_preco.query.filter_by(cod_preco=id).first()
+    form = frm_editar_preco()
+    form.descricao.data = preco.desc_preco
+    form.status.data = preco.status_preco
+    form.horas.data = preco.horas_preco
+    form.preco.data = preco.valor_preco
+    return render_template('editarPreco.html', titulo='Editar Preço', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: atualizarPreco
+#FUNÇÃO: alterar as informações dos preços no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/atualizarPreco', methods=['POST',])
+def atualizarPreco():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('atualizarPreco')))      
+    form = frm_editar_preco(request.form)
+    if form.validate_on_submit():
+        id = request.form['id']
+        preco = tb_preco.query.filter_by(cod_preco=request.form['id']).first()
+        preco.desc_preco = form.descricao.data
+        preco.status_preco= form.status.data
+        preco.horas_preco = form.horas.data
+        preco.valor_preco = form.preco.data
+        db.session.add(preco)
+        db.session.commit()
+        flash('Preco atualizado com sucesso!','success')
+    else:
+        flash('Favor verificar os campos!','danger')
+    return redirect(url_for('visualizarPreco', id=request.form['id'])) 

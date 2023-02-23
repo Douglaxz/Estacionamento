@@ -3,7 +3,7 @@ import os
 from estacionamento import app, db
 from models import tb_user, tb_usertype, tb_tipoveiculo, tb_marcaveiculo,tb_preco, tb_veiculo
 from flask_wtf import FlaskForm
-from wtforms import Form, StringField, validators, SubmitField,IntegerField, SelectField,PasswordField,DateField,EmailField,BooleanField,RadioField, TextAreaField, TimeField, TelField, DateTimeLocalField,FloatField
+from wtforms import Form, StringField, validators, SubmitField,IntegerField, SelectField,PasswordField,DateField,EmailField,BooleanField,RadioField, TextAreaField, TimeField, TelField, DateTimeLocalField,FloatField, DecimalField 
 
 ##################################################################################################################################
 #PESQUISA
@@ -171,10 +171,10 @@ class frm_visualizar_veiculo(FlaskForm):
 #TABELA: tb_preco
 #---------------------------------------------------------------------------------------------------------------------------------
 class frm_editar_preco(FlaskForm):
-    descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a descrição do tipo de veículo"})
+    descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a descrição do preço"})
     status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
-    horas = FloatField('Total Horas:', [validators.DataRequired()], render_kw={"placeholder": "digite o total de horas"})
-    preco = FloatField('Total Horas:', [validators.DataRequired()], render_kw={"placeholder": "digite o valor"})
+    horas = DecimalField ('Total Horas:', [validators.DataRequired()], render_kw={"placeholder": "digite o total de horas"})
+    preco = DecimalField ('Valor R$:', [validators.DataRequired()], render_kw={"placeholder": "digite o valor"})
     salvar = SubmitField('Salvar')    
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -185,8 +185,8 @@ class frm_editar_preco(FlaskForm):
 class frm_visualizar_preco(FlaskForm):
     descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={'readonly': True})
     status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')], render_kw={'readonly': True})
-    horas = FloatField('Total Horas:', [validators.DataRequired()],render_kw={'readonly': True})
-    preco = FloatField('Total Horas:', [validators.DataRequired()],render_kw={'readonly': True})
+    horas = DecimalField ('Total Horas:', [validators.DataRequired()],render_kw={'readonly': True})
+    preco = DecimalField ('Valor R$:', [validators.DataRequired()],render_kw={'readonly': True})
     salvar = SubmitField('Salvar')  
     
                 
