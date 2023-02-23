@@ -429,12 +429,12 @@ def atualizarTipoUsuario():
 ##################################################################################################################################
 
 #---------------------------------------------------------------------------------------------------------------------------------
-#ROTA: tipoveiculos
+#ROTA: tipoveiculo
 #FUNÇÃO: tela do sistema para mostrar os tipos de veículos cadastrados
 #PODE ACESSAR: usuários do tipo administrador
 #---------------------------------------------------------------------------------------------------------------------------------
-@app.route('/tipoveiculos', methods=['POST','GET'])
-def tipoveiculos():
+@app.route('/tipoveiculo', methods=['POST','GET'])
+def tipoveiculo():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         flash('Sessão expirou, favor logar novamente','danger')
         return redirect(url_for('login',proxima=url_for('tipoveiculos')))         
@@ -451,7 +451,7 @@ def tipoveiculos():
         tiposveiculo = tb_tipoveiculo.query.order_by(tb_tipoveiculo.desc_tipoveiculo)\
         .filter(tb_tipoveiculo.desc_tipoveiculos.ilike(f'%{pesquisa}%'))\
         .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
-    return render_template('tipoveiculos.html', titulo='Tipo Veículo', tiposveiculo=tiposveiculo, form=form)
+    return render_template('tipoveiculo.html', titulo='Tipo Veículo', tiposveiculo=tiposveiculo, form=form)
 
 #---------------------------------------------------------------------------------------------------------------------------------
 #ROTA: novoTipoVeiculo
@@ -488,7 +488,7 @@ def criarTipoVeiculo():
         return redirect(url_for('tipoveiculo')) 
     novoTipoVeiculo = tb_tipoveiculo(desc_tipoveiculo=desc, status_tipoveiculo=status)
     flash('Tipo de novoTipoVeiculo criado com sucesso!','success')
-    db.session.add(novoTipoUsuario)
+    db.session.add(novoTipoVeiculo)
     db.session.commit()
     return redirect(url_for('tipoveiculo'))
 
