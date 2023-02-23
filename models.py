@@ -62,3 +62,16 @@ class tb_veiculo(db.Model):
     cod_marcaveiculo = db.Column(db.Integer, nullable=False)
     def __repr__(self):
         return '<Name %r>' % self.name          
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#TABELA: PREÇOS
+#ORIGEM: BANCO DE DADOS
+#---------------------------------------------------------------------------------------------------------------------------------
+class tb_preco(db.Model):
+    cod_preco = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    desc_preco = db.Column(db.String(50), nullable=False)
+    status_preco = db.Column(db.Integer, nullable=False)
+    horas_preco = db.Column(db.Float, nullable=False)
+    valor_preco = db.Column(db.Float, nullable=False)
+    def __repr__(self):
+        return '<Name %r>' % self.name     

@@ -8,7 +8,9 @@ from models import tb_user,\
     tb_usertype,\
     tb_tipoveiculo,\
     tb_marcaveiculo,\
-    tb_veiculo
+    tb_veiculo,\
+    tb_preco
+
 from helpers import \
     frm_pesquisa, \
     frm_editar_senha,\
@@ -21,7 +23,9 @@ from helpers import \
     frm_editar_marcaveiculo,\
     frm_visualizar_marcaveiculo,\
     frm_editar_veiculo,\
-    frm_visualizar_veiculo
+    frm_visualizar_veiculo,\
+    frm_editar_preco,\
+    frm_visualizar_preco
 
 
 # ITENS POR PÁGINA
@@ -741,7 +745,7 @@ def criarVeiculo():
     if veiculo:
         flash ('Veículo já existe','danger')
         return redirect(url_for('veiculo')) 
-    novoVeiculo = tb_marcaveiculo(desc_veiculo=desc, status_veiculo=status,cod_marcaveiculo=marca,cod_tipoveiculo=tipo)
+    novoVeiculo = tb_veiculo(desc_veiculo=desc, status_veiculo=status,cod_marcaveiculo=marca,cod_tipoveiculo=tipo)
     flash('Veículo criado com sucesso!','success')
     db.session.add(novoVeiculo)
     db.session.commit()
