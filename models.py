@@ -87,3 +87,22 @@ class tb_tipopagamento(db.Model):
     status_tipopagamento = db.Column(db.Integer, nullable=False)
     def __repr__(self):
         return '<Name %r>' % self.name 
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#TABELA: ESTACIONAMENTO
+#ORIGEM: BANCO DE DADOS
+#---------------------------------------------------------------------------------------------------------------------------------
+class tb_estacionamento(db.Model):
+    cod_estacionamento = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    placa_estacionamento = db.Column(db.String(50), nullable=False)
+    status_estacionamento = db.Column(db.Integer, nullable=False)
+    cod_tipopagamento = db.Column(db.Integer, nullable=False)
+    cod_veiculo = db.Column(db.Integer, nullable=False)
+    valor_estacionamento = db.Column(db.Float, nullable=False)
+    entrada_estacionamento = db.Column(db.DateTime, nullable=False)
+    saida_estacionamento = db.Column(db.DateTime, nullable=False)
+    def __repr__(self):
+        return '<Name %r>' % self.name
+ 
+
+

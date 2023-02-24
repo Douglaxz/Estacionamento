@@ -10,7 +10,8 @@ from models import tb_user,\
     tb_marcaveiculo,\
     tb_veiculo,\
     tb_preco,\
-    tb_tipopagamento
+    tb_tipopagamento,\
+    tb_estacionamento
 
 from helpers import \
     frm_pesquisa, \
@@ -28,7 +29,10 @@ from helpers import \
     frm_editar_preco,\
     frm_visualizar_preco,\
     frm_editar_tipopagamento,\
-    frm_visualizar_tipopagamento
+    frm_visualizar_tipopagamento,\
+    frm_editar_estacionamento,\
+    frm_visualizar_estacionamento,\
+    frm_editar_estacionamento_entrada
 
 
 # ITENS POR PÁGINA
@@ -1069,3 +1073,138 @@ def atualizarTipoPagamento():
     else:
         flash('Favor verificar os campos!','danger')
     return redirect(url_for('visualizarTipoPagamento', id=request.form['id']))  
+
+##################################################################################################################################
+#ESTACIONAMENTO
+##################################################################################################################################
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: estacionamento
+#FUNÇÃO: tela do sistema para mostrar os estacionamento cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/estacionamento', methods=['POST','GET'])
+def estacionamento():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('estacionamento')))         
+    page = request.args.get('page', 1, type=int)
+    form = frm_pesquisa()   
+    pesquisa = form.pesquisa.data
+    if pesquisa == "":
+        pesquisa = form.pesquisa_responsiva.data
+    
+    if pesquisa == "" or pesquisa == None:     
+        estacionamentos = tb_estacionamento.query.order_by(tb_estacionamento.entrada_estacionamento)\
+        .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
+    else:
+        estacionamentos = tb_estacionamento.query.order_by(tb_estacionamento.entrada_estacionament)\
+        .filter(tb_estacionamento.placa_estacionamento.ilike(f'%{pesquisa}%'))\
+        .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
+    return render_template('estacionamento.html', titulo='Estacionamento', estacionamentos=estacionamentos, form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: novoEstacionamento
+#FUNÇÃO: mostrar o formulário de cadastro de estacionamento
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/novoEstacionamento')
+def novoEstacionamento():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('novoEstacionamento'))) 
+    form = frm_editar_estacionamento()
+    form.entrada.data = datetime.now()
+    return render_template('novoEstacionamento.html', titulo='Novo Estacionamento', form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: criarEstacionamento
+#FUNÇÃO: inserir informações do estacionamento no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/criarEstacionamento', methods=['POST',])
+def criarEstacionamento():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('criarEstacionamento')))     
+    form = frm_editar_estacionamento_entrada(request.form)
+    #return str(form.entrada.data)
+    if not form.validate_on_submit():
+        flash('Por favor, preencha todos os dados','danger')
+        return redirect(url_for('criarEstacionamento'))
+    placa  = form.placa.data
+    status = form.status.data
+    entrada = form.entrada.data
+    veiculo = form.veiculo.data
+
+    estacionamento = tb_estacionamento.query.filter_by(entrada_estacionamento=entrada).first()
+    if estacionamento:
+        flash ('Estacionamento já existe','danger')
+        return redirect(url_for('estacionamento')) 
+    novoEstacionamento = tb_estacionamento(placa_estacionamento=placa, status_estacionamento=status,entrada_estacionamento=entrada,cod_veiculo=veiculo)
+    flash('Tipo de pagamento criado com sucesso!','success')
+    db.session.add(novoEstacionamento)
+    db.session.commit()
+    return redirect(url_for('estacionamento'))
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: visualizarEstacionamento
+#FUNÇÃO: mostrar formulário de visualização dos estacionamento cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/visualizarEstacionamento/<int:id>')
+def visualizarEstacionamento(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('visualizarEstacionamento')))  
+    estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=id).first()
+    form = frm_visualizar_estacionamento()
+    form.placa.data = estacionamento.placa_estacionamento
+    form.status.data = estacionamento.status_estacionamento
+    form.entrada.data = estacionamento.entrada_estacionamento
+    form.veiculo.data = estacionamento.cod_veiculo
+    return render_template('visualizarEstacionamento.html', titulo='Visualizar Estacionamento', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: editarEstacionamento
+##FUNÇÃO: mostrar formulário de edição dos estacionamento cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/editarEstacionamento/<int:id>')
+def editarEstacionamento(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('editarEstacionamento')))  
+    estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=id).first()
+    form = frm_editar_estacionamento_entrada()
+    form.placa.data = estacionamento.placa_estacionamento
+    form.status.data = estacionamento.status_estacionamento
+    form.entrada.data = estacionamento.entrada_estacionamento
+    form.veiculo.data = estacionamento.cod_veiculo
+    return render_template('editarEstacionamento.html', titulo='Editar Estacionamento', id=id, form=form)   
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: atualizarEstacionamento
+#FUNÇÃO: alterar as informações dos estacionamento no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/atualizarEstacionamento', methods=['POST',])
+def atualizarEstacionamento():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('atualizarEstacionamento')))      
+    form = frm_editar_estacionamento_entrada(request.form)
+    if form.validate_on_submit():
+        id = request.form['id']
+        estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=request.form['id']).first()
+        estacionamento.placa_estacionamento = form.placa.data
+        estacionamento.status_estacionamento = form.status.data
+        estacionamento.entrada_estacionamento = form.entrada.data
+        estacionamento.cod_veiculo = form.veiculo.data
+
+        db.session.add(estacionamento)
+        db.session.commit()
+        flash('Estacionamento atualizado com sucesso!','success')
+    else:
+        flash('Favor verificar os campos!','danger')
+    return redirect(url_for('visualizarEstacionamento', id=request.form['id']))  

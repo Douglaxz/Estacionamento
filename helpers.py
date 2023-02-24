@@ -212,3 +212,52 @@ class frm_visualizar_tipopagamento(FlaskForm):
     descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={'readonly': True})
     status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')], render_kw={'readonly': True})
     salvar = SubmitField('Salvar')    
+
+##################################################################################################################################
+#ESTACIONAMENTO
+##################################################################################################################################
+
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: estacionamento
+#TIPO: edição
+#TABELA: tb_estacionamento
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_editar_estacionamento_entrada(FlaskForm):
+    placa = StringField('Placa:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a placa"})
+    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
+    entrada = DateTimeLocalField('Entrada:', [validators.DataRequired()], format='%Y-%m-%dT%H:%M')
+    veiculo = SelectField('Veiculo:', coerce=int, choices=[(g.cod_veiculo, g.desc_veiculo) for g in tb_veiculo.query.order_by('desc_veiculo')])
+    salvar = SubmitField('Salvar')  
+
+
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: estacionamento
+#TIPO: edição
+#TABELA: tb_estacionamento
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_editar_estacionamento(FlaskForm):
+    placa = StringField('Placa:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a placa"})
+    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
+    entrada = DateTimeLocalField('Entrada:', [validators.DataRequired()], format='%Y-%m-%dT%H:%M')
+    saida = DateTimeLocalField('Saída:', format='%Y-%m-%dT%H:%M', render_kw={'readonly': True})
+    valor = DecimalField ('Valor R$:',render_kw={'readonly': True})
+    veiculo = SelectField('Veiculo:', coerce=int, choices=[(g.cod_veiculo, g.desc_veiculo) for g in tb_veiculo.query.order_by('desc_veiculo')])
+    pagamento = SelectField('Pagamento:', coerce=int, choices=[(g.cod_tipopagamento, g.desc_tipopagamento) for g in tb_tipopagamento.query.order_by('desc_tipopagamento')])
+    salvar = SubmitField('Salvar')    
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: estacionamento
+#TIPO: visualização
+#TABELA: tb_estacionamento
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_visualizar_estacionamento(FlaskForm):
+    placa = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=7)], render_kw={'readonly': True})
+    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')], render_kw={'readonly': True})
+    entrada = DateTimeLocalField('Entrada:', [validators.DataRequired()], format='%Y-%m-%dT%H:%M', render_kw={'readonly': True})
+    saida = DateTimeLocalField('Saída:', format='%Y-%m-%dT%H:%M', render_kw={'readonly': True})
+    valor = DecimalField ('Valor R$:', [validators.DataRequired()],render_kw={'readonly': True})
+    veiculo = SelectField('Veiculo:', coerce=int, choices=[(g.cod_veiculo, g.desc_veiculo) for g in tb_veiculo.query.order_by('desc_veiculo')], render_kw={'readonly': True})
+    pagamento = SelectField('Pagamento:', coerce=int, choices=[(g.cod_tipopagamento, g.desc_tipopagamento) for g in tb_tipopagamento.query.order_by('desc_tipopagamento')], render_kw={'readonly': True})
+    salvar = SubmitField('Salvar')  
