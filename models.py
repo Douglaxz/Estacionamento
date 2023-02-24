@@ -71,8 +71,10 @@ class tb_preco(db.Model):
     cod_preco = db.Column(db.Integer, primary_key=True, autoincrement=True)
     desc_preco = db.Column(db.String(50), nullable=False)
     status_preco = db.Column(db.Integer, nullable=False)
-    horas_preco = db.Column(db.Float, nullable=False)
+    minutoinicio_preco = db.Column(db.Integer, nullable=False)
+    minutofinal_preco = db.Column(db.Integer, nullable=False)
     valor_preco = db.Column(db.Float, nullable=False)
+    ordem_preco = db.Column(db.Integer, nullable=False)
     def __repr__(self):
         return '<Name %r>' % self.name     
 

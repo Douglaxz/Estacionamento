@@ -28,7 +28,8 @@
       <thead>
           <tr>
             <th width="40%">Preço</th>
-            <th width="20%">Hora</th>
+            <th width="10%">Minuto Inicial</th>
+            <th width="10%">Minuto Final</th>
             <th width="20%">Valor R$</th>
             <th width="10%">Status</th>
             <th width="10%">Ações</th>
@@ -38,7 +39,8 @@
           {% for preco in precos.items %}
           <tr>
               <td class="text-left">{{ preco.desc_preco }}</td>
-              <td class="text-left">{{ preco.horas_preco}}</td>
+              <td class="text-left">{{ preco.minutoinicio_preco}}</td>
+              <td class="text-left">{{ preco.minutofinal_preco}}</td>
               <td class="text-left">{{ preco.valor_preco }}</td>
               <td class="text-left">
                 {% if preco.status_preco == 0: %}

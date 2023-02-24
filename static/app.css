@@ -390,6 +390,11 @@ div.op2 {
     font-weight: bold;
 }
 
+select[readonly] {
+    pointer-events: none;
+    touch-action: none;
+  }
+
 @media screen and (max-width: 1040px){
 
     .divlogin{

@@ -173,8 +173,10 @@ class frm_visualizar_veiculo(FlaskForm):
 class frm_editar_preco(FlaskForm):
     descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a descrição do preço"})
     status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
-    horas = DecimalField ('Total Horas:', [validators.DataRequired()], render_kw={"placeholder": "digite o total de horas"})
+    minutoinicial = DecimalField ('Minuto Inicial:', [validators.DataRequired()], render_kw={"placeholder": "digite o minuto inicial"})
+    minutofinal = DecimalField ('Minuto Final:', [validators.DataRequired()], render_kw={"placeholder": "digite o minuto final"})
     preco = DecimalField ('Valor R$:', [validators.DataRequired()], render_kw={"placeholder": "digite o valor"})
+    ordem = DecimalField ('Ordem:', [validators.DataRequired()], render_kw={"placeholder": "digite a ordem de exibição"})
     salvar = SubmitField('Salvar')    
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -185,8 +187,10 @@ class frm_editar_preco(FlaskForm):
 class frm_visualizar_preco(FlaskForm):
     descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={'readonly': True})
     status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')], render_kw={'readonly': True})
-    horas = DecimalField ('Total Horas:', [validators.DataRequired()],render_kw={'readonly': True})
+    minutoinicial = DecimalField ('Minuto Inicial:', [validators.DataRequired()],render_kw={'readonly': True})
+    minutofinal = DecimalField ('Minuto Final:', [validators.DataRequired()],render_kw={'readonly': True})
     preco = DecimalField ('Valor R$:', [validators.DataRequired()],render_kw={'readonly': True})
+    ordem = DecimalField ('Ordem:', [validators.DataRequired()],render_kw={'readonly': True})
     salvar = SubmitField('Salvar')  
 
 ##################################################################################################################################
@@ -225,7 +229,6 @@ class frm_visualizar_tipopagamento(FlaskForm):
 #---------------------------------------------------------------------------------------------------------------------------------
 class frm_editar_estacionamento_entrada(FlaskForm):
     placa = StringField('Placa:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a placa"})
-    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
     entrada = DateTimeLocalField('Entrada:', [validators.DataRequired()], format='%Y-%m-%dT%H:%M')
     veiculo = SelectField('Veiculo:', coerce=int, choices=[(g.cod_veiculo, g.desc_veiculo) for g in tb_veiculo.query.order_by('desc_veiculo')])
     salvar = SubmitField('Salvar')  
@@ -238,12 +241,11 @@ class frm_editar_estacionamento_entrada(FlaskForm):
 #TABELA: tb_estacionamento
 #---------------------------------------------------------------------------------------------------------------------------------
 class frm_editar_estacionamento(FlaskForm):
-    placa = StringField('Placa:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a placa"})
-    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
-    entrada = DateTimeLocalField('Entrada:', [validators.DataRequired()], format='%Y-%m-%dT%H:%M')
+    placa = StringField('Placa:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={'readonly': True})
+    entrada = DateTimeLocalField('Entrada:', [validators.DataRequired()], render_kw={'readonly': True})
     saida = DateTimeLocalField('Saída:', format='%Y-%m-%dT%H:%M', render_kw={'readonly': True})
     valor = DecimalField ('Valor R$:',render_kw={'readonly': True})
-    veiculo = SelectField('Veiculo:', coerce=int, choices=[(g.cod_veiculo, g.desc_veiculo) for g in tb_veiculo.query.order_by('desc_veiculo')])
+    veiculo = SelectField('Veiculo:', coerce=int, choices=[(g.cod_veiculo, g.desc_veiculo) for g in tb_veiculo.query.order_by('desc_veiculo')], render_kw={'readonly': True})
     pagamento = SelectField('Pagamento:', coerce=int, choices=[(g.cod_tipopagamento, g.desc_tipopagamento) for g in tb_tipopagamento.query.order_by('desc_tipopagamento')])
     salvar = SubmitField('Salvar')    
 
@@ -261,3 +263,13 @@ class frm_visualizar_estacionamento(FlaskForm):
     veiculo = SelectField('Veiculo:', coerce=int, choices=[(g.cod_veiculo, g.desc_veiculo) for g in tb_veiculo.query.order_by('desc_veiculo')], render_kw={'readonly': True})
     pagamento = SelectField('Pagamento:', coerce=int, choices=[(g.cod_tipopagamento, g.desc_tipopagamento) for g in tb_tipopagamento.query.order_by('desc_tipopagamento')], render_kw={'readonly': True})
     salvar = SubmitField('Salvar')  
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: estacionamento
+#TIPO: edição
+#TABELA: tb_estacionamento
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_editar_estacionamento_finalizar(FlaskForm):
+    pagamento = SelectField('Pagamento:', coerce=int, choices=[(g.cod_tipopagamento, g.desc_tipopagamento) for g in tb_tipopagamento.query.order_by('desc_tipopagamento')])
+    saida = DateTimeLocalField('Saída:', format='%Y-%m-%dT%H:%M', render_kw={'readonly': True})
+    valor = DecimalField ('Valor R$:', [validators.DataRequired()],render_kw={'readonly': True})

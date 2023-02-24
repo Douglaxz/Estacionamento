@@ -1,6 +1,7 @@
 # importação de dependencias
 from datetime import datetime, date
-from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory
+from flask import Flask, render_template, request, redirect, session, flash, url_for, send_from_directory,send_file
+from flask_qrcode import QRcode
 import time
 from datetime import date, timedelta
 from estacionamento import app, db
@@ -32,7 +33,8 @@ from helpers import \
     frm_visualizar_tipopagamento,\
     frm_editar_estacionamento,\
     frm_visualizar_estacionamento,\
-    frm_editar_estacionamento_entrada
+    frm_editar_estacionamento_entrada,\
+    frm_editar_estacionamento_finalizar
 
 
 # ITENS POR PÁGINA
@@ -46,6 +48,13 @@ import numbers
 ##################################################################################################################################
 #GERAL
 ##################################################################################################################################
+
+
+@app.route("/qrcode", methods=["GET"])
+def get_qrcode():
+    # please get /qrcode?data=<qrcode_data>
+    data = request.args.get("data", "")
+    return send_file(qrcode(data, mode="raw"), mimetype="image/png")
 
 #---------------------------------------------------------------------------------------------------------------------------------
 #ROTA: index
@@ -840,10 +849,10 @@ def preco():
         pesquisa = form.pesquisa_responsiva.data
     
     if pesquisa == "" or pesquisa == None:     
-        precos = tb_preco.query.order_by(tb_preco.desc_preco)\
+        precos = tb_preco.query.order_by(tb_preco.ordem_preco)\
         .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
     else:
-        precos = tb_preco.query.order_by(tb_preco.desc_preco)\
+        precos = tb_preco.query.order_by(tb_preco.ordem_preco)\
         .filter(tb_preco.desc_precoilike(f'%{pesquisa}%'))\
         .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
     return render_template('preco.html', titulo='Preços', precos=precos, form=form)
@@ -877,14 +886,15 @@ def criarPreco():
         return redirect(url_for('criarPreco'))
     desc  = form.descricao.data
     status = form.status.data
-    horas = form.horas.data
+    minutoinicial = form.minutoinicial.data
+    minutofinal = form.minutofinal.data
     valor = form.preco.data
-    
+    ordem = form.ordem.data
     preco = tb_preco.query.filter_by(desc_preco=desc).first()
     if preco:
         flash ('Preço já existe','danger')
         return redirect(url_for('preco')) 
-    novoPreco = tb_preco(desc_preco=desc, status_preco=status,horas_preco=horas,valor_preco=valor)
+    novoPreco = tb_preco(desc_preco=desc, status_preco=status,minutoinicial_preco=minutoinicial,minutofinal_preco=minutofinal,valor_preco=valor,ordem_preco=ordem)
     flash('Preço criado com sucesso!','success')
     db.session.add(novoPreco)
     db.session.commit()
@@ -904,8 +914,10 @@ def visualizarPreco(id):
     form = frm_visualizar_preco()
     form.descricao.data = preco.desc_preco
     form.status.data = preco.status_preco
-    form.horas.data = preco.horas_preco
+    form.minutoinicial.data = preco.minutoinicio_preco
+    form.minutofinal.data = preco.minutofinal_preco
     form.preco.data = preco.valor_preco
+    form.ordem.data = preco.ordem_preco
     return render_template('visualizarPreco.html', titulo='Visualizar Preço', id=id, form=form)   
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -922,8 +934,10 @@ def editarPreco(id):
     form = frm_editar_preco()
     form.descricao.data = preco.desc_preco
     form.status.data = preco.status_preco
-    form.horas.data = preco.horas_preco
+    form.minutoinicial.data = preco.minutoinicio_preco
+    form.minutofinal.data = preco.minutofinal_preco
     form.preco.data = preco.valor_preco
+    form.ordem.data = preco.ordem_preco
     return render_template('editarPreco.html', titulo='Editar Preço', id=id, form=form)   
 
 #---------------------------------------------------------------------------------------------------------------------------------
@@ -942,8 +956,10 @@ def atualizarPreco():
         preco = tb_preco.query.filter_by(cod_preco=request.form['id']).first()
         preco.desc_preco = form.descricao.data
         preco.status_preco= form.status.data
-        preco.horas_preco = form.horas.data
+        preco.minutoinicio_preco = form.minutoinicial.data
+        preco.minutofinal_preco = form.minutofinal.data
         preco.valor_preco = form.preco.data
+        preco.ordem_preco = form.ordem.data
         db.session.add(preco)
         db.session.commit()
         flash('Preco atualizado com sucesso!','success')
@@ -1095,11 +1111,21 @@ def estacionamento():
         pesquisa = form.pesquisa_responsiva.data
     
     if pesquisa == "" or pesquisa == None:     
-        estacionamentos = tb_estacionamento.query.order_by(tb_estacionamento.entrada_estacionamento)\
+        estacionamentos = tb_estacionamento.query\
+        .join(tb_veiculo, tb_estacionamento.cod_veiculo==tb_veiculo.cod_veiculo)\
+        .join(tb_marcaveiculo, tb_marcaveiculo.cod_marcaveiculo==tb_veiculo.cod_marcaveiculo)\
+        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento)\
+        .order_by(tb_estacionamento.entrada_estacionamento.desc())\
+        .filter(tb_estacionamento.valor_estacionamento == None)\
         .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
     else:
-        estacionamentos = tb_estacionamento.query.order_by(tb_estacionamento.entrada_estacionament)\
+        estacionamentos = tb_estacionamento.query\
+        .join(tb_veiculo, tb_estacionamento.cod_veiculo==tb_veiculo.cod_veiculo)\
+        .join(tb_marcaveiculo, tb_marcaveiculo.cod_marcaveiculo==tb_veiculo.cod_marcaveiculo)\
+        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento)\
+        .order_by(tb_estacionamento.entrada_estacionamento.desc())\
         .filter(tb_estacionamento.placa_estacionamento.ilike(f'%{pesquisa}%'))\
+        .filter(tb_estacionamento.valor_estacionamento == None)\
         .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
     return render_template('estacionamento.html', titulo='Estacionamento', estacionamentos=estacionamentos, form=form)
 
@@ -1113,7 +1139,7 @@ def novoEstacionamento():
     if 'usuario_logado' not in session or session['usuario_logado'] == None:
         flash('Sessão expirou, favor logar novamente','danger')
         return redirect(url_for('login',proxima=url_for('novoEstacionamento'))) 
-    form = frm_editar_estacionamento()
+    form = frm_editar_estacionamento_entrada()
     form.entrada.data = datetime.now()
     return render_template('novoEstacionamento.html', titulo='Novo Estacionamento', form=form)
 
@@ -1133,7 +1159,6 @@ def criarEstacionamento():
         flash('Por favor, preencha todos os dados','danger')
         return redirect(url_for('criarEstacionamento'))
     placa  = form.placa.data
-    status = form.status.data
     entrada = form.entrada.data
     veiculo = form.veiculo.data
 
@@ -1141,7 +1166,7 @@ def criarEstacionamento():
     if estacionamento:
         flash ('Estacionamento já existe','danger')
         return redirect(url_for('estacionamento')) 
-    novoEstacionamento = tb_estacionamento(placa_estacionamento=placa, status_estacionamento=status,entrada_estacionamento=entrada,cod_veiculo=veiculo)
+    novoEstacionamento = tb_estacionamento(placa_estacionamento=placa,entrada_estacionamento=entrada,cod_veiculo=veiculo)
     flash('Tipo de pagamento criado com sucesso!','success')
     db.session.add(novoEstacionamento)
     db.session.commit()
@@ -1160,7 +1185,6 @@ def visualizarEstacionamento(id):
     estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=id).first()
     form = frm_visualizar_estacionamento()
     form.placa.data = estacionamento.placa_estacionamento
-    form.status.data = estacionamento.status_estacionamento
     form.entrada.data = estacionamento.entrada_estacionamento
     form.veiculo.data = estacionamento.cod_veiculo
     return render_template('visualizarEstacionamento.html', titulo='Visualizar Estacionamento', id=id, form=form)   
@@ -1178,7 +1202,6 @@ def editarEstacionamento(id):
     estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=id).first()
     form = frm_editar_estacionamento_entrada()
     form.placa.data = estacionamento.placa_estacionamento
-    form.status.data = estacionamento.status_estacionamento
     form.entrada.data = estacionamento.entrada_estacionamento
     form.veiculo.data = estacionamento.cod_veiculo
     return render_template('editarEstacionamento.html', titulo='Editar Estacionamento', id=id, form=form)   
@@ -1198,7 +1221,6 @@ def atualizarEstacionamento():
         id = request.form['id']
         estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=request.form['id']).first()
         estacionamento.placa_estacionamento = form.placa.data
-        estacionamento.status_estacionamento = form.status.data
         estacionamento.entrada_estacionamento = form.entrada.data
         estacionamento.cod_veiculo = form.veiculo.data
 
@@ -1208,3 +1230,92 @@ def atualizarEstacionamento():
     else:
         flash('Favor verificar os campos!','danger')
     return redirect(url_for('visualizarEstacionamento', id=request.form['id']))  
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: editarEstacionamento
+##FUNÇÃO: mostrar formulário de edição dos estacionamento cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/finalizarEstacionamento/<int:id>')
+def finalizarEstacionamento(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('finalizarEstacionamento')))  
+    estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=id).first()
+    form = frm_editar_estacionamento()
+    form.placa.data = estacionamento.placa_estacionamento
+    form.entrada.data = estacionamento.entrada_estacionamento
+    form.saida.data = datetime.now()
+    form.veiculo.data = estacionamento.cod_veiculo
+    tempo = datetime.now() - estacionamento.entrada_estacionamento
+    minutos = int(tempo.total_seconds()/60)
+    
+
+    precos = tb_preco.query.order_by(tb_preco.desc_preco)
+
+    for preco in precos:
+        if minutos >= (preco.minutoinicio_preco) and minutos <= (preco.minutofinal_preco):
+            valorfinal = preco.valor_preco
+    qrcodeimagem = str(estacionamento.placa_estacionamento) +"-"+ str(valorfinal)
+    form.valor.data = valorfinal
+    return render_template('finalizarEstacionamento.html', titulo='Finalizar Estacionamento', id=id, form=form,qrcodeimagem=qrcodeimagem)  
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: concluirEstacionamento
+#FUNÇÃO: alterar as informações dos estacionamento no banco de dados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/concluirEstacionamento', methods=['POST',])
+def concluirEstacionamento():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('concluirEstacionamento')))      
+    form = frm_editar_estacionamento_finalizar(request.form)
+    if form.validate_on_submit():
+        id = request.form['id']
+        estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=request.form['id']).first()
+        estacionamento.cod_tipopagamento = form.pagamento.data
+        estacionamento.saida_estacionamento = form.saida.data
+        estacionamento.valor_estacionamento = form.valor.data
+        
+        db.session.add(estacionamento)
+        db.session.commit()
+        flash('Estacionamento finalizado com sucesso!','success')
+    else:
+        flash('Favor verificar os campos!','danger')
+    return redirect(url_for('estacionamento'))  
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: estacionamentoHistorico
+#FUNÇÃO: tela do sistema para mostrar os estacionamento cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/estacionamentoHistorico', methods=['POST','GET'])
+def estacionamentoHistorico():
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('estacionamentoHistorico')))         
+    page = request.args.get('page', 1, type=int)
+    form = frm_pesquisa()   
+    pesquisa = form.pesquisa.data
+    if pesquisa == "":
+        pesquisa = form.pesquisa_responsiva.data
+    
+    if pesquisa == "" or pesquisa == None:     
+        estacionamentos = tb_estacionamento.query\
+        .join(tb_veiculo, tb_estacionamento.cod_veiculo==tb_veiculo.cod_veiculo)\
+        .join(tb_marcaveiculo, tb_marcaveiculo.cod_marcaveiculo==tb_veiculo.cod_marcaveiculo)\
+        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento)\
+        .order_by(tb_estacionamento.entrada_estacionamento.desc())\
+        .filter(tb_estacionamento.valor_estacionamento != None)\
+        .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
+    else:
+        estacionamentos = tb_estacionamento.query\
+        .join(tb_veiculo, tb_estacionamento.cod_veiculo==tb_veiculo.cod_veiculo)\
+        .join(tb_marcaveiculo, tb_marcaveiculo.cod_marcaveiculo==tb_veiculo.cod_marcaveiculo)\
+        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento)\
+        .order_by(tb_estacionamento.entrada_estacionamento.desc())\
+        .filter(tb_estacionamento.placa_estacionamento.ilike(f'%{pesquisa}%'))\
+        .filter(tb_estacionamento.valor_estacionamento != None)\
+        .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
+    return render_template('estacionamentoHistorico.html', titulo='Estacionamento Historico', estacionamentos=estacionamentos, form=form)
