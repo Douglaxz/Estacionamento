@@ -1249,10 +1249,7 @@ def finalizarEstacionamento(id):
     form.veiculo.data = estacionamento.cod_veiculo
     tempo = datetime.now() - estacionamento.entrada_estacionamento
     minutos = int(tempo.total_seconds()/60)
-    
-
     precos = tb_preco.query.order_by(tb_preco.desc_preco)
-
     for preco in precos:
         if minutos >= (preco.minutoinicio_preco) and minutos <= (preco.minutofinal_preco):
             valorfinal = preco.valor_preco
@@ -1319,3 +1316,20 @@ def estacionamentoHistorico():
         .filter(tb_estacionamento.valor_estacionamento != None)\
         .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
     return render_template('estacionamentoHistorico.html', titulo='Estacionamento Historico', estacionamentos=estacionamentos, form=form)
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: emitirTicket
+#FUNÇÃO: tela do sistema para mostrar os estacionamento cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#---------------------------------------------------------------------------------------------------------------------------------
+@app.route('/emitirTicket/<int:id>')
+def emitirTicket(id):
+    estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=id).first()
+    placa = estacionamento.placa_estacionamento
+    entrada = estacionamento.entrada_estacionamento.strftime("%d/%m/%Y %H:%M")
+    veiculo = tb_veiculo.query.filter_by(cod_veiculo=estacionamento.cod_veiculo).first()
+    modelo = veiculo.desc_veiculo
+    marcas = tb_marcaveiculo.query.filter_by(cod_marcaveiculo=veiculo.cod_marcaveiculo).first()
+    marca = marcas.desc_marcaveiculo
+    qrcodeimagem = str(placa) +"|"+ str(marca) +"|"+ str(modelo) + "|"+ str(entrada)
+    return render_template('ticket.html', titulo='Ticket Estacionamento', id=id, placa=placa, entrada=entrada, modelo=modelo,marca=marca,qrcodeimagem=qrcodeimagem)  

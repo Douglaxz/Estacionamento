@@ -1,0 +1,49 @@
+{% extends "templateTicket.html"%}
+{% block conteudo %}
+<div class="boxticket">
+  <table class="tabelaticket">
+      <tbody>
+        <tr>
+          <td><i class="bi bi-car-front-fill" style="font-size:4rem; color:black;"></i></td>
+          <td align="center"><b>Amaralpark Estacionamentos</b></td>
+        </tr>
+        <tr>
+          <td colspan="2">--------------------------------------------</td>
+        </tr>          
+        <tr>
+          <td >Entrada:</td>
+          <td>{{ entrada }}</td>
+        </tr>  
+        <tr>
+          <td>Placa:</td>
+          <td>{{ placa }}</td>
+        </tr>
+        <tr>
+          <td>Marca:</td>
+          <td>{{ marca }}</td>
+        </tr>         
+        <tr>
+          <td>Modelo:</td>
+          <td>{{ modelo }}</td>
+        </tr>        
+        <tr>
+          <td colspan="2">--------------------------------------------</td>
+        </tr>
+        <tr>
+          <td colspan="2" align="center"><img src="{{ qrcode(qrcodeimagem, box_size=7) }}"> </td>
+        </tr>                  
+        <tr>
+          <td colspan="2">--------------------------------------------</td>
+        </tr> 
+        <tr>
+          <td colspan="2" align="center">Obrigado pela preferência</td>
+        </tr>
+        <tr>
+          <td colspan="2">--------------------------------------------</td>
+        </tr>                 
+        
+      </tbody>
+  </table>
+</div>
+
+{% endblock%}

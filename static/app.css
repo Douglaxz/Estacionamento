@@ -123,6 +123,20 @@ footer {
     background-color: white;
 }
 
+.boxticket{
+    margin: 10px auto;
+    width: 20%; /* Valor da Largura */
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 10px;  
+    line-height: 170%;
+    text-align: left;
+    height: auto;
+    border: 2px solid black;
+    background-color: white;
+}
+
 .divmarrom {
     background-color: #7F7045;
     color: white;
@@ -310,6 +324,10 @@ div.op2 {
     text-align: center;
 
 }
+
+td {
+    vertical-align: middle;
+  }
 
 .divlogin{
     left: 50%;
