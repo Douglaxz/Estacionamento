@@ -32,14 +32,14 @@ Para começar, verifique a instalação dos seguintes itens:
 
 
 ## :memo: Checklist de funcionalidades - TODO LIST
-- [ ] Funcionalidade Login
-- [ ] Funcionalidade Logout
-- [ ] Funcionalidade template
-- [ ] Funcionalidade usuário
-- [ ] Funcionalidade tipo de usuário
-- [ ] Funcionalidade cadsatro de marcas
-- [ ] Funcionalidade cadastro de modelos
-- [ ] Funcionalidade Cadastro de clientes
+- [X] Funcionalidade Login
+- [X] Funcionalidade Logout
+- [X] Funcionalidade template
+- [X] Funcionalidade usuário
+- [X] Funcionalidade tipo de usuário
+- [X] Funcionalidade cadsatro de marcas
+- [X] Funcionalidade cadastro de modelos
+- [X] Funcionalidade tipo pagamento
 - [ ] Funcionalidade Cadastro de vagas
 - [ ] Funcionalidade Temporizador de ocupação de vaga
 - [ ] Outros

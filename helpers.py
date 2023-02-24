@@ -1,7 +1,7 @@
 #importações
 import os
 from estacionamento import app, db
-from models import tb_user, tb_usertype, tb_tipoveiculo, tb_marcaveiculo,tb_preco, tb_veiculo
+from models import tb_user, tb_usertype, tb_tipoveiculo, tb_marcaveiculo,tb_preco, tb_veiculo, tb_tipopagamento
 from flask_wtf import FlaskForm
 from wtforms import Form, StringField, validators, SubmitField,IntegerField, SelectField,PasswordField,DateField,EmailField,BooleanField,RadioField, TextAreaField, TimeField, TelField, DateTimeLocalField,FloatField, DecimalField 
 
@@ -188,5 +188,27 @@ class frm_visualizar_preco(FlaskForm):
     horas = DecimalField ('Total Horas:', [validators.DataRequired()],render_kw={'readonly': True})
     preco = DecimalField ('Valor R$:', [validators.DataRequired()],render_kw={'readonly': True})
     salvar = SubmitField('Salvar')  
-    
-                
+
+##################################################################################################################################
+#TIPO DE PAGAMENTO
+##################################################################################################################################
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: tipo de pagamento
+#TIPO: edição
+#TABELA: tb_pagamento
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_editar_tipopagamento(FlaskForm):
+    descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={"placeholder": "digite a descrição do tipo de usuário"})
+    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')])
+    salvar = SubmitField('Salvar')    
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#FORMUÁRIO: tipo de pagamento
+#TIPO: visualização
+#TABELA: tb_pagamento
+#---------------------------------------------------------------------------------------------------------------------------------
+class frm_visualizar_tipopagamento(FlaskForm):
+    descricao = StringField('Descrição:', [validators.DataRequired(), validators.Length(min=1, max=50)], render_kw={'readonly': True})
+    status = SelectField('Situação:', coerce=int, choices=[(0, 'Ativo'),(1, 'Inativo')], render_kw={'readonly': True})
+    salvar = SubmitField('Salvar')    

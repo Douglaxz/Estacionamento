@@ -75,3 +75,15 @@ class tb_preco(db.Model):
     valor_preco = db.Column(db.Float, nullable=False)
     def __repr__(self):
         return '<Name %r>' % self.name     
+
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#TABELA: TIPO PAGAMENTO
+#ORIGEM: BANCO DE DADOS
+#---------------------------------------------------------------------------------------------------------------------------------
+class tb_tipopagamento(db.Model):
+    cod_tipopagamento = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    desc_tipopagamento = db.Column(db.String(50), nullable=False)
+    status_tipopagamento = db.Column(db.Integer, nullable=False)
+    def __repr__(self):
+        return '<Name %r>' % self.name 

@@ -1,0 +1,30 @@
+{% extends "template.html"%}
+{% block conteudo %}
+<form method="post" action="{{ url_for('atualizarTipoPagamento') }}" enctype="multipart/form-data" id="formulario">
+  <div class="box_cabecalho">
+    <div class="box_titulo_interno">
+      <i class="bi bi-card-list" data-toggle="tooltip" data-placement="right" title="Tipo Pagamento"></i> {{ titulo }}
+    </div>
+    <div class="box_botoes">
+      <a class="btn btn_titulo" href="#" onclick="myFunction()"><i class="bi bi-save" style="font-size:1.5rem; color:white;"></i></a>
+    </div>
+    <div class="box_botoes">
+      <a class="btn btn_titulo" href="{{url_for('visualizarTipoPagamento',id=id)}}"><i class="bi bi-reply" style="font-size:1.5rem; color:white;"></i></a>
+    </div>
+  </div>
+  <div class="boxformulario">
+  <fieldset>
+    <input type="hidden" name="id" id="id" value="{{id}}">
+    {{form.csrf_token()}}
+    <div class="form-group">
+      {{form.descricao.label(class="form-label")}}
+      {{form.descricao(class="form-control")}}
+    </div>
+    <div class="form-group">
+      {{form.status.label(class="form-label")}}
+      {{form.status(class="form-control readonly")}}
+    </div>
+  </fieldset>
+</div>
+</form>
+{% endblock%}
