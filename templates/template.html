@@ -51,7 +51,7 @@
       {% if messages %}
         {% for category, message in messages %}
         <br>
-        <div class="p-3 mb-1 bg-{{category}} text-white" role="alert">
+        <div class="msg_alert bg-{{category}}" role="alert">
           {{ message }}
         </div>   
         {% endfor %}
@@ -68,6 +68,7 @@
     </a>
     <span class="mb-3 mb-md-0 text-muted">&copy; 2022 Gerenciador Estacionamento</span>
   </div>
+
 </footer>
 <script>
   function myFunction() {

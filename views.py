@@ -1188,7 +1188,7 @@ def visualizarEstacionamento(id):
     form.placa.data = estacionamento.placa_estacionamento
     form.entrada.data = estacionamento.entrada_estacionamento
     form.veiculo.data = estacionamento.cod_veiculo
-    return render_template('visualizarEstacionamento.html', titulo='Visualizar Estacionamento', id=id, form=form)   
+    return render_template('visualizarEstacionamento.html', titulo='Vis. Estacionam', id=id, form=form)   
 
 #---------------------------------------------------------------------------------------------------------------------------------
 #ROTA: editarEstacionamento

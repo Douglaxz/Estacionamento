@@ -465,7 +465,32 @@ select[readonly] {
     touch-action: none;
   }
 
+  .msg_alert{
+    margin: 15px auto;
+    width: 70%; /* Valor da Largura */
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 5px;
+    line-height: 50px;
+    font-size: 1.5vw;
+    color: white;
+    text-align: left;   
+    font-weight: bold;
+    display: flex;
+    border: 2px solid black;
+
+  }
+
 @media screen and (max-width: 1040px){
+
+    .msg_alert{
+        margin: 15px auto;
+        width: 100%; /* Valor da Largura */
+        font-size: 4vw;
+
+      }
+    
 
     .divlogin{
         height: 50vh;
@@ -536,7 +561,7 @@ select[readonly] {
         font-weight: bold;
         display: flex;
         border: 2px solid black;
-        background-color: #CE7C2A;
+        background-color: #0d6efd;
         margin-left: 0px;
 
 
