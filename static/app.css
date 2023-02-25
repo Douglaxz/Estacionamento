@@ -325,6 +325,58 @@ div.op2 {
 
 }
 
+.cards {
+    width: 100%;
+}
+
+.cards__lista{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: space-between;
+    width: 270px;
+    height: 130px;
+    margin: 5px;
+    display: inline-block;
+    border-radius: 10px;
+    box-shadow: 0px 15px 15px #00000050;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+
+.cardladodireito{
+    margin-top: -17%;
+}
+.card__tag {
+    font-size: 1.2rem;
+    margin-left: 30%;
+    text-align: left;
+    font-weight: bold;
+
+}
+
+.card__botao {
+    font-size: 1rem;
+    left: 15px;
+    top: 75px;
+    position: absolute;
+}
+
+.card__info {
+    font-size: 1rem;
+    margin-left: 30%;
+
+}
+
+.card__imagem {
+    width: 40px;
+    position:relative;
+    top:5%;
+    left:5%;
+    margin-top:0px;
+}
+
 td {
     vertical-align: middle;
   }
@@ -428,6 +480,35 @@ select[readonly] {
         opacity: 0.9;
     }
 
+
+    .cards__lista{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-content: space-between;
+    width: 95%;
+    height: 15%;
+    margin-bottom: 10px;
+    }
+
+    .card__imagem{
+        width: 15%;
+    }
+
+    .cardladodireito{
+        width: 80%;
+    }
+    .cardladodireito{
+        margin-top: 0%;
+    }
+
+    .card__info{
+        margin-left: 10px;
+    }
+
+    .card__tag{
+        margin-left: 10px;
+    }
 
     .boxformulario {
         width: 94vw;
