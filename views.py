@@ -5,6 +5,7 @@ from flask_qrcode import QRcode
 import time
 from datetime import date, timedelta
 from estacionamento import app, db
+from sqlalchemy import func
 from models import tb_user,\
     tb_usertype,\
     tb_tipoveiculo,\
@@ -1250,9 +1251,20 @@ def finalizarEstacionamento(id):
     tempo = datetime.now() - estacionamento.entrada_estacionamento
     minutos = int(tempo.total_seconds()/60)
     precos = tb_preco.query.order_by(tb_preco.desc_preco)
+    precomaior = db.session.query(func.max(tb_preco.valor_preco)).first()
+    valormaior = 0
+    for preco in precomaior:
+        valormaior = preco
+
+    
+    valorfinal = 0
+
     for preco in precos:
+        if minutos > 1440:
+            valorfinal = valormaior
+            minutos = minutos - 1440
         if minutos >= (preco.minutoinicio_preco) and minutos <= (preco.minutofinal_preco):
-            valorfinal = preco.valor_preco
+            valorfinal = valorfinal + preco.valor_preco
     qrcodeimagem = str(estacionamento.placa_estacionamento) +"-"+ str(valorfinal)
     form.valor.data = valorfinal
     return render_template('finalizarEstacionamento.html', titulo='Finalizar Estacionamento', id=id, form=form,qrcodeimagem=qrcodeimagem)  
