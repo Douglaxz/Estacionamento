@@ -25,26 +25,27 @@
   <table class="table table-bordered table-responsiv table-hover">
       <thead>
           <tr>
-            <th width="30%">Entrada</th>
-            <th width="20%">Marca</th>
-            <th width="20%">Modelo</th>
-            <th width="20%">Placa</th>
-            <th width="10%" colspan="2">Ações</th>
+            <th width="17%">Entrada</th>
+            <th width="17%">Saída</th>
+            <th width="10%">Valor</th>
+            <th width="15%">Marca</th>
+            <th width="15%">Modelo</th>
+            <th width="15%">Placa</th>
+            <th width="10%" colspan="1">Ações</th>
           </tr>
       </thead>
       <tbody>
           {% for estacionamento in estacionamentos.items %}
           <tr>
               <td class="text-left">{{ estacionamento.entrada_estacionamento.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td class="text-left">{{ estacionamento.saida_estacionamento.strftime('%d/%m/%Y %H:%M') }}</td>
+              <td class="text-left">{{ estacionamento.valor_estacionamento }}</td>
               <td class="text-left">{{ estacionamento.desc_marcaveiculo }}</td>
               <td class="text-left">{{ estacionamento.desc_veiculo }}</td>
               <td class="text-left">{{ estacionamento.placa_estacionamento }}</td>                  
               <td>
-                <a class="btn" href="{{url_for('visualizarEstacionamento',id=estacionamento.cod_estacionamento)}}"><i class="bi bi-eye" style="font-size:1.5rem; color:black;"></i></a>
+                <a class="btn" href="{{url_for('visualizarEstacionamentoHistorico',id=estacionamento.cod_estacionamento)}}"><i class="bi bi-eye" style="font-size:1.5rem; color:black;"></i></a>
               </td>
-              <td>
-                <a class="btn" href="{{url_for('finalizarEstacionamento',id=estacionamento.cod_estacionamento)}}"><i class="bi bi-escape" style="font-size:1.5rem; color:black;"></i></a>
-            </td>             
           </tr>
           {% endfor %}
       </tbody>

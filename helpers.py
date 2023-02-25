@@ -234,7 +234,6 @@ class frm_editar_estacionamento_entrada(FlaskForm):
     salvar = SubmitField('Salvar')  
 
 
-
 #---------------------------------------------------------------------------------------------------------------------------------
 #FORMUÁRIO: estacionamento
 #TIPO: edição

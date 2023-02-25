@@ -1302,7 +1302,7 @@ def estacionamentoHistorico():
         estacionamentos = tb_estacionamento.query\
         .join(tb_veiculo, tb_estacionamento.cod_veiculo==tb_veiculo.cod_veiculo)\
         .join(tb_marcaveiculo, tb_marcaveiculo.cod_marcaveiculo==tb_veiculo.cod_marcaveiculo)\
-        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento)\
+        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento, tb_estacionamento.saida_estacionamento, tb_estacionamento.valor_estacionamento)\
         .order_by(tb_estacionamento.entrada_estacionamento.desc())\
         .filter(tb_estacionamento.valor_estacionamento != None)\
         .paginate(page=page, per_page=ROWS_PER_PAGE , error_out=False)
@@ -1310,12 +1310,33 @@ def estacionamentoHistorico():
         estacionamentos = tb_estacionamento.query\
         .join(tb_veiculo, tb_estacionamento.cod_veiculo==tb_veiculo.cod_veiculo)\
         .join(tb_marcaveiculo, tb_marcaveiculo.cod_marcaveiculo==tb_veiculo.cod_marcaveiculo)\
-        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento)\
+        .add_columns(tb_estacionamento.cod_estacionamento, tb_estacionamento.placa_estacionamento, tb_veiculo.desc_veiculo, tb_marcaveiculo.desc_marcaveiculo, tb_estacionamento.entrada_estacionamento, tb_estacionamento.saida_estacionamento, tb_estacionamento.valor_estacionamento)\
         .order_by(tb_estacionamento.entrada_estacionamento.desc())\
         .filter(tb_estacionamento.placa_estacionamento.ilike(f'%{pesquisa}%'))\
         .filter(tb_estacionamento.valor_estacionamento != None)\
         .paginate(page=page, per_page=ROWS_PER_PAGE, error_out=False)        
     return render_template('estacionamentoHistorico.html', titulo='Estacionamento Historico', estacionamentos=estacionamentos, form=form)
+
+
+#---------------------------------------------------------------------------------------------------------------------------------
+#ROTA: visualizarEstacionamentoHistorico
+#FUNÇÃO: mostrar formulário de visualização dos estacionamento cadastrados
+#PODE ACESSAR: usuários do tipo administrador
+#--------------------------------------------------------------------------------------------------------------------------------- 
+@app.route('/visualizarEstacionamentoHistorico/<int:id>')
+def visualizarEstacionamentoHistorico(id):
+    if 'usuario_logado' not in session or session['usuario_logado'] == None:
+        flash('Sessão expirou, favor logar novamente','danger')
+        return redirect(url_for('login',proxima=url_for('visualizarEstacionamento')))  
+    estacionamento = tb_estacionamento.query.filter_by(cod_estacionamento=id).first()
+    form = frm_visualizar_estacionamento()
+    form.placa.data = estacionamento.placa_estacionamento
+    form.entrada.data = estacionamento.entrada_estacionamento
+    form.saida.data = estacionamento.saida_estacionamento
+    form.valor.data = estacionamento.valor_estacionamento
+    form.veiculo.data = estacionamento.cod_veiculo
+    form.pagamento.data = estacionamento.cod_tipopagamento
+    return render_template('visualizarEstacionamentoHistorico.html', titulo='Visualizar Estacionamento Historico', id=id, form=form)  
 
 #---------------------------------------------------------------------------------------------------------------------------------
 #ROTA: emitirTicket

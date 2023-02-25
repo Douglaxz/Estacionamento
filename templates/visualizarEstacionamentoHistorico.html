@@ -1,0 +1,34 @@
+{% extends "template.html"%}
+{% block conteudo %}
+<div class="box_cabecalho">
+  <div class="box_titulo_interno">
+    <i class="bi bi-sign-stop" data-toggle="tooltip" data-placement="right" title="Tipo Usuários"></i> {{ titulo }}
+  </div>
+  <div class="box_botoes">
+    <a class="btn btn_titulo" href="{{url_for('estacionamentoHistorico')}}"><i class="bi bi-reply" style="font-size:1.5rem; color:white;"></i></a>
+  </div>
+</div>
+<div class="boxformulario">
+  <fieldset>
+    {{form.csrf_token()}}
+    <div class="form-group">{{ form.placa.label(class='form-label') }}
+      {{ form.placa(class='form-control') }}
+    </div>
+    <div class="form-group">{{ form.veiculo.label(class='form-label') }}
+      {{ form.veiculo(class='form-control') }}
+    </div>
+    <div class="form-group">{{ form.entrada.label(class='form-label') }}
+      {{ form.entrada(class='form-control') }}
+    </div>      
+    <div class="form-group">{{ form.saida.label(class='form-label') }}
+      {{ form.saida(class='form-control') }}
+    </div>    
+    <div class="form-group">{{ form.valor.label(class='form-label') }}
+      {{ form.valor(class='form-control') }}
+    </div>         
+    <div class="form-group">{{ form.pagamento.label(class='form-label') }}
+      {{ form.pagamento(class='form-control') }}
+    </div>                        
+  </fieldset>  
+</div>
+{% endblock%}
