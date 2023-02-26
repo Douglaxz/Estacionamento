@@ -8,14 +8,26 @@ em desenvolvimento
 
 ## :rocket: Começando:
 Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
+Estapas para rodar o projeto
+- Clonar o repositório
+- Instalar python (caso não tenha instalado)
+- Instalar flask (caso não tenha instalado)
+- Instalar flask-bcrypt (caso não tenha instalado)
+- Instalar flask-qrcode (caso não tenha instalado)
+- Baixar o banco de dados
+- executar o comando: python estacionamento.py no terminal
 
 ## :wrench: Pré-requisitos e instalações:
 Para começar, verifique a instalação dos seguintes itens:
-- [X] Python 
-- [X] Flask
-- [X] SQLAlchemy
-- [X] Mysql
-- [X] Flask Bcrypt  - pip install flask-bcript
+
+| Componente    | Site                                          | Download / intalação                    |
+| ------------- | ----------------------------------------------|-----------------------------------------|
+| Python        | https://python.org.br/                        |https://www.python.org/downloads/        |
+| Flask         | https://flask.palletsprojects.com/en/2.2.x/   |pip install flask                        |
+| SQLAlchemy    | https://www.sqlalchemy.org/                   |https://www.sqlalchemy.org/download.html |
+| Mysql         | https://www.mysql.com/downloads/              |https://www.mysql.com/downloads/         |
+| Flask Bcrypt  | https://flask-bcrypt.readthedocs.io/en/1.0.1/ |pip install flask-bcript                 |
+| Flask QrCode  | https://pypi.org/project/Flask-QRcode/        |pip install Flask-QRcode          |
 
 ## :hammer_and_wrench: Construído com:
 - VsCode
@@ -40,9 +52,8 @@ Para começar, verifique a instalação dos seguintes itens:
 - [X] Funcionalidade cadsatro de marcas
 - [X] Funcionalidade cadastro de modelos
 - [X] Funcionalidade tipo pagamento
-- [ ] Funcionalidade Cadastro de vagas
-- [ ] Funcionalidade Temporizador de ocupação de vaga
-- [ ] Outros
+- [X] Funcionalidade geração de qrcode para pagamento via pix
+- [X] Funcionalidade geração de ticket de estacionamento
 
 
 ## :paperclips: Colaborando:
