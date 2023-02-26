@@ -14,7 +14,7 @@ Estapas para rodar o projeto
 - Instalar flask (caso não tenha instalado)
 - Instalar flask-bcrypt (caso não tenha instalado)
 - Instalar flask-qrcode (caso não tenha instalado)
-- Baixar o banco de dados
+- Baixar o banco de dados (aguardando finalização do projeto)
 - executar o comando: python estacionamento.py no terminal
 
 ## :wrench: Pré-requisitos e instalações:
