@@ -4,7 +4,7 @@
  Este projeto visa contemplar as funcionalidades de um estacionamento
 
 ## :video_camera: Amostra do projeto:
-em desenvolvimento
+quase finalizando
 
 ## :rocket: Começando:
 Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
