@@ -4,7 +4,7 @@
  Este projeto visa contemplar as funcionalidades de um estacionamento
 
 ## :video_camera: Amostra do projeto:
-[<img src="https://github.com/Douglaxz/Petcenter/blob/main/miniatura.png" width="100%">](https://youtu.be/eiT8gW2zn-M "Estacionamento")
+[<img src="https://github.com/Douglaxz/Estacionamento/blob/main/miniatura.png" width="100%">](https://youtu.be/eiT8gW2zn-M "Estacionamento")
 
 ## :rocket: Começando:
 Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
