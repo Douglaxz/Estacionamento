@@ -1,6 +1,6 @@
  # Gerenciador de uma estacionamento rotativo - Amaralpark
 
- ## :computer: Descrição do projeto: Gerenciador de quiz e pesquisas - QuizCreator
+ ## :computer: Descrição do projeto:
  Este projeto visa contemplar as funcionalidades de um estacionamento
 
 ## :video_camera: Amostra do projeto:
