@@ -1,0 +1,7 @@
+Flask==2.*
+Flask-SQLAlchemy==3.*
+Flask-QRcode==3.*
+flask-bcrypt
+Flask-WTF
+mysqlclient
+mysql-connector-python

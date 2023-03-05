@@ -9,25 +9,11 @@
 ## :rocket: Começando:
 Essas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
 Estapas para rodar o projeto
-- Clonar o repositório
-- Instalar python (caso não tenha instalado)
-- Instalar flask (caso não tenha instalado)
-- Instalar flask-bcrypt (caso não tenha instalado)
-- Instalar flask-qrcode (caso não tenha instalado)
-- Baixar o banco de dados (aguardando finalização do projeto)
-- executar o comando: python estacionamento.py no terminal
-
-## :wrench: Pré-requisitos e instalações:
-Para começar, verifique a instalação dos seguintes itens:
-
-| Componente    | Site                                          | Download / intalação                    |
-| ------------- | ----------------------------------------------|-----------------------------------------|
-| Python        | https://python.org.br/                        |https://www.python.org/downloads/        |
-| Flask         | https://flask.palletsprojects.com/en/2.2.x/   |pip install flask                        |
-| SQLAlchemy    | https://www.sqlalchemy.org/                   |https://www.sqlalchemy.org/download.html |
-| Mysql         | https://www.mysql.com/downloads/              |https://www.mysql.com/downloads/         |
-| Flask Bcrypt  | https://flask-bcrypt.readthedocs.io/en/1.0.1/ |pip install flask-bcript                 |
-| Flask QrCode  | https://pypi.org/project/Flask-QRcode/        |pip install Flask-QRcode          |
+- `git clone https://github.com/Douglaxz/Estacionamento.git`
+- `virtualenv env --python=python3.9`
+- `source env/bin/activate`
+- `pip install -r requirements.txt`
+- `python estacionamento.py`
 
 ## :hammer_and_wrench: Construído com:
 - VsCode
